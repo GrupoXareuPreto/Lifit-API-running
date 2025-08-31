@@ -9,7 +9,7 @@ import java.util.List;
 @Repository
 public interface UsuarioRepository extends JpaRepository<Usuario, Long> {
     Usuario findByEmail(String email);
-
+    Usuario findBySenha(String senha);
 
     Usuario findByEmailContainingIgnoreCase(String email);
 

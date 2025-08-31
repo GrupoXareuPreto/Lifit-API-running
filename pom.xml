@@ -76,6 +76,14 @@
 
 	<build>
 		<plugins>
+		<plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-resources-plugin</artifactId>
+            <version>3.3.1</version> <!-- Use a versão mais recente ou a que está no log de erro -->
+            <configuration>
+                <encoding>UTF-8</encoding>
+            </configuration>
+        </plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>

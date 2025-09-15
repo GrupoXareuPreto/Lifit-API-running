@@ -1,0 +1,6 @@
+- fazer o crud das classe que precisam
+- fazer com que exista uma forma de login do usuário
+- fazer com que o usuário possa editar somente o próprio perfil
+- programar a parte das senhas (hash e salt)
+- fazer um retorno melhor para as exceptions
+- aprender a usar DTOs

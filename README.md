@@ -1,2 +1,2 @@
-# Lifit-API-runnin
-Repositório dedicado a hospedar a APIexecutando
+# Lift-API
+Repositório destinado a API do projeto Lift

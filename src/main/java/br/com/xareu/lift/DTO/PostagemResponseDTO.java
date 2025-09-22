@@ -4,7 +4,6 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Data
@@ -12,7 +11,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 public class PostagemResponseDTO {
 
-    private UsuarioResumoDTO cardUsuario;
+    private UsuarioCardPostagemDTO cardUsuario;
     private String midia;
     private String titulo;
     private String descricao;

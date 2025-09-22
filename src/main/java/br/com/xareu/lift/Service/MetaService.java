@@ -22,6 +22,8 @@ public class MetaService {
         this.metaRepository = metaRepository;
         this.usuarioRepository = usuarioRepository;
     }
+/*--------------------------------------------------------------------------------------------------------------------*/
+/* Parte de DTOs */
 
     private MetaResponseDTO toResponseDTO(Meta meta){
         if(meta == null){
@@ -37,16 +39,7 @@ public class MetaService {
         }
     }
 
-    private Meta toEntity(MetaRequestDTO dto){
-        Meta meta = new Meta();
-        meta.setNome(dto.getNome());
-        meta.setPublica(dto.isPublica());
-        meta.setStatus(dto.getStatus());
-        meta.setDataInicio(dto.getDataInicio());
-        meta.setDataFim(dto.getDataFim());
-
-        return meta;
-    }
+/*--------------------------------------------------------------------------------------------------------------------*/
 
     public MetaResponseDTO criarMeta(MetaRequestDTO metaDTO, Long autorId){
         Usuario autor = usuarioRepository.findById(autorId).orElseThrow(() -> new IllegalArgumentException("Autor não encontrado"  + autorId));
@@ -55,6 +48,7 @@ public class MetaService {
         meta.setNome(metaDTO.getNome());
         meta.setPublica(metaDTO.isPublica());
         meta.setAutor(autor);
+        meta.setDataFim(metaDTO.getDataFim());
 
         Meta savedMeta = metaRepository.save(meta);
         return toResponseDTO(savedMeta);

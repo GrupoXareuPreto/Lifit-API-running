@@ -18,21 +18,20 @@ public class Evento {
     @Column(name = "ID_EVENTO")
     private Long id;
 
-    @Column(name = "TX_TITULO")
+    @Column(name = "TX_TITULO", nullable = false)
     private String titulo;
 
     @Column(name = "TX_DESCRICAO")
     private String descricao;
 
-    @Column(name = "TX_LOCALIZACAO")
+    @Column(name = "TX_LOCALIZACAO",nullable = false)
     private String localizacao;
 
     @Column(name = "TX_ATIVIDADE")
     private String atividade;
 
-    @Column(name = "DT_INICIO")
+    @Column(name = "DT_INICIO" , nullable = false)
     private LocalDateTime dataInicio;
-
 
     @Column(name = "DT_FIM")
     private LocalDateTime dataFim;

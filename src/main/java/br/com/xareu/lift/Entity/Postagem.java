@@ -22,7 +22,7 @@ public class Postagem {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "TX_MIDIA")
+    @Column(name = "TX_MIDIA", nullable = false)
     private String midia;
 
     @Column(name = "TX_TITULO", nullable = false)

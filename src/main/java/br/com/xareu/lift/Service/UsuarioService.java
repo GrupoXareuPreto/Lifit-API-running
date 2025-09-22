@@ -1,7 +1,9 @@
 package br.com.xareu.lift.Service;
 
+import br.com.xareu.lift.DTO.UsuarioCardConversaDTO;
 import br.com.xareu.lift.DTO.UsuarioRequestDTO;
 import br.com.xareu.lift.DTO.UsuarioResponseDTO;
+import br.com.xareu.lift.DTO.UsuarioCardPostagemDTO;
 import br.com.xareu.lift.Entity.Usuario;
 import br.com.xareu.lift.Repository.UsuarioRepository;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -33,6 +35,31 @@ public class UsuarioService {
                 usuario.getEmail(),
                 usuario.getNomeUsuario()
         );
+    }
+
+    public UsuarioCardPostagemDTO toUsuarioCardPostagemDTO(Usuario usuario){
+        if(usuario == null){
+            return null;
+        }
+        else {
+            return new UsuarioCardPostagemDTO(
+                    usuario.getFotoPerfil(),
+                    usuario.getNome(),
+                    usuario.getNomeUsuario()
+            );
+        }
+    }
+
+    public UsuarioCardConversaDTO toUsuarioCardConversaDTO(Usuario usuario){
+        if(usuario == null){
+            return null;
+        }
+        else {
+            return new UsuarioCardConversaDTO(
+                    usuario.getFotoPerfil(),
+                    usuario.getNome()
+            );
+        }
     }
 
     private Usuario toEntity(UsuarioRequestDTO dto){

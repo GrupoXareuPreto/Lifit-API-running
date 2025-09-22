@@ -37,6 +37,8 @@ public class Usuario {
     @Column(name = "TX_FOTO_PERFIL")
     private String fotoPerfil;
 
+    /*Ver como isso vai funcionar*/
+    /*statusUsuario -------> online | Offline */
 
 // =========================================================================================
 // Ver com a Marion

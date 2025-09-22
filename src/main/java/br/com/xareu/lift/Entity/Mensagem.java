@@ -19,15 +19,15 @@ public class Mensagem {
     @Column(name  = "ID_MENSAGEM")
     private Long  id;
 
-    @Column(name = "DT_ENVIO")
+    @Column(name = "DT_ENVIO", nullable = false)
     private LocalDateTime dataEnvio = LocalDateTime.now();
 
-    @Column(name = "TX_CONTEUDO")
+    @Column(name = "TX_CONTEUDO", nullable = false)
     public String conteudo;
 
-    @Column(name = "STATUS_MENSAGEM")
+    @Column(name = "STATUS_MENSAGEM", nullable = false)
     @Enumerated(EnumType.STRING)
-    private StatusMensagemEnum status = StatusMensagemEnum.ENVIADA_NAO_RECEBIDA;
+    private StatusMensagemEnum status = StatusMensagemEnum.NAO_ENVIADA;
 
     @ManyToOne
     @JoinColumn(name = "ID_CONVERSA", nullable = false)

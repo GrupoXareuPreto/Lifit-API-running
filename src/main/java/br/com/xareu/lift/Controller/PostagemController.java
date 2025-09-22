@@ -1,9 +1,13 @@
 package br.com.xareu.lift.Controller;
 
+import br.com.xareu.lift.DTO.PostagemRequestDTO;
 import br.com.xareu.lift.DTO.PostagemResponseDTO;
 import br.com.xareu.lift.Entity.Postagem;
 import br.com.xareu.lift.Service.PostagemService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -16,19 +20,20 @@ public class PostagemController {
     @Autowired
     private PostagemService service;
 
-    @PostMapping
-    public Postagem criarPostagem(@RequestBody Postagem postagemNova){
-        return service.criarPostagem(postagemNova);
+    @PostMapping("usuario/{idAutor}")
+    public ResponseEntity<PostagemResponseDTO> criarPostagem(@Valid @RequestBody PostagemRequestDTO postagemNova, @PathVariable Long idAutor){
+        try{
+            PostagemResponseDTO postagem = service.criarPostagem(postagemNova, idAutor);
+            return new ResponseEntity<>(postagem, HttpStatus.CREATED);
+        }
+        catch (IllegalArgumentException e){
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
+        }
     }
 
     @GetMapping("/Feed")
-    public ResponseEntity<List<PostagemResponseDTO>> getOnFeed(){
-
-    }
-
-    @GetMapping
-    public List<Postagem> getAll(){
-        return service.getAll();
+    public List<PostagemResponseDTO> getAll(){
+        return service.getFeed();
     }
 
     @DeleteMapping("/{id}")

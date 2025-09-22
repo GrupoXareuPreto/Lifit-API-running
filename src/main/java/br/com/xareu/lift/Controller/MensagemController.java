@@ -1,8 +1,11 @@
 package br.com.xareu.lift.Controller;
 
-import br.com.xareu.lift.Entity.Mensagem;
+import br.com.xareu.lift.DTO.MensagemRequestDTO;
+import br.com.xareu.lift.DTO.MensagemResponseDTO;
 import br.com.xareu.lift.Service.MensagemService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -15,14 +18,21 @@ public class MensagemController {
     @Autowired
     private MensagemService service;
 
-    @PostMapping
-    public Mensagem criarMensagem(@RequestBody Mensagem mensagemNova){
-        return service.criarMensagem(mensagemNova);
+    @PostMapping("/autor/{autorId}/conversa/{conversaId}")
+    public ResponseEntity<MensagemResponseDTO> criarMensagem(@Valid @RequestBody MensagemRequestDTO mensagemDTO,@PathVariable Long autorId, @PathVariable Long conversaId){
+        try{
+            MensagemResponseDTO novaMensagem = service.criarMensagem(mensagemDTO, autorId, conversaId);
+            return new ResponseEntity<>(novaMensagem, HttpStatus.CREATED);
+        }
+        catch (IllegalArgumentException e){
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
+        }
     }
 
-    @GetMapping
-    public List<Mensagem> getAll(){
-        return  service.getAll();
+    @GetMapping("/conversa/{ConversaId}")
+    public ResponseEntity<List<MensagemResponseDTO>> ListarMensagensConversa(@PathVariable Long conversaId){
+        List<MensagemResponseDTO> mensagens = service.listarMensagensConversa(conversaId);
+        return ResponseEntity.ok(mensagens);
     }
 
     /*Mensagem nao tem update*/

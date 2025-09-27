@@ -1,7 +1,7 @@
 package br.com.xareu.lift.Service;
 
-import br.com.xareu.lift.DTO.MensagemRequestDTO;
-import br.com.xareu.lift.DTO.MensagemResponseDTO;
+import br.com.xareu.lift.DTO.Mensagem.MensagemRequestDTO;
+import br.com.xareu.lift.DTO.Mensagem.MensagemResponseDTO;
 import br.com.xareu.lift.Entity.Conversa;
 import br.com.xareu.lift.Entity.Mensagem;
 import br.com.xareu.lift.Repository.ConversaRepository;
@@ -10,11 +10,11 @@ import br.com.xareu.lift.Repository.UsuarioRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
 public class MensagemService {
+
     private MensagemRepository repository;
     private UsuarioRepository usuarioRepository;
     private ConversaRepository conversaRepository;
@@ -57,14 +57,15 @@ public class MensagemService {
 
     }
 
+
     public List<MensagemResponseDTO> listarMensagensConversa(Long IdConversa) {
         Conversa conversa = conversaRepository.findById(IdConversa).orElseThrow(() -> new IllegalArgumentException("Conversa não encontrada" + IdConversa));
-        Long Id_conversa = conversa.getId();
 
-        List<Mensagem> mensagens = repository.findByConversa(conversa);
+        List<Mensagem> mensagensRAW = repository.findByConversa(conversa).stream().collect(Collectors.toList());
 
-        return mensagens.stream().map(this :: toResponseDTO).collect(Collectors.toList());
+        List<MensagemResponseDTO> mensagensDTO = mensagensRAW.stream().map(this::toResponseDTO).collect(Collectors.toList());
 
+        return mensagensDTO;
     }
 
 

@@ -1,12 +1,10 @@
 package br.com.xareu.lift.Controller;
 
-import br.com.xareu.lift.DTO.PostagemRequestDTO;
-import br.com.xareu.lift.DTO.PostagemResponseDTO;
-import br.com.xareu.lift.Entity.Postagem;
+import br.com.xareu.lift.DTO.Postagem.PostagemRequestDTO;
+import br.com.xareu.lift.DTO.Postagem.PostagemResponseDTO;
 import br.com.xareu.lift.Service.PostagemService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

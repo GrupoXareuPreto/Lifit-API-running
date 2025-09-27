@@ -1,9 +1,9 @@
 package br.com.xareu.lift.Service;
 
-import br.com.xareu.lift.DTO.UsuarioCardConversaDTO;
-import br.com.xareu.lift.DTO.UsuarioRequestDTO;
-import br.com.xareu.lift.DTO.UsuarioResponseDTO;
-import br.com.xareu.lift.DTO.UsuarioCardPostagemDTO;
+import br.com.xareu.lift.DTO.Usuario.UsuarioResponseCardConversaDTO;
+import br.com.xareu.lift.DTO.Usuario.UsuarioRequestDTO;
+import br.com.xareu.lift.DTO.Usuario.UsuarioResponseDTO;
+import br.com.xareu.lift.DTO.Usuario.UsuarioResponseCardPostagemDTO;
 import br.com.xareu.lift.Entity.Usuario;
 import br.com.xareu.lift.Repository.UsuarioRepository;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -23,8 +23,8 @@ public class UsuarioService {
         this.repository = usuarioRepository;
         this.passwordEncoder = passwordEncoder;
     }
-/*--------------------------------------------------------------------------------------------------------------------*/
-/*Parte de DTOs*/
+    /*--------------------------------------------------------------------------------------------------------------------*/
+    /*Parte de DTOs*/
     private UsuarioResponseDTO toResponseDTO(Usuario usuario){
         if(usuario == null){
             return null;
@@ -37,12 +37,12 @@ public class UsuarioService {
         );
     }
 
-    public UsuarioCardPostagemDTO toUsuarioCardPostagemDTO(Usuario usuario){
+    public UsuarioResponseCardPostagemDTO toUsuarioCardPostagemDTO(Usuario usuario){
         if(usuario == null){
             return null;
         }
         else {
-            return new UsuarioCardPostagemDTO(
+            return new UsuarioResponseCardPostagemDTO(
                     usuario.getFotoPerfil(),
                     usuario.getNome(),
                     usuario.getNomeUsuario()
@@ -50,12 +50,12 @@ public class UsuarioService {
         }
     }
 
-    public UsuarioCardConversaDTO toUsuarioCardConversaDTO(Usuario usuario){
+    public UsuarioResponseCardConversaDTO toUsuarioCardConversaDTO(Usuario usuario){
         if(usuario == null){
             return null;
         }
         else {
-            return new UsuarioCardConversaDTO(
+            return new UsuarioResponseCardConversaDTO(
                     usuario.getFotoPerfil(),
                     usuario.getNome()
             );

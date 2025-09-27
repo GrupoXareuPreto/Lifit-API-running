@@ -1,7 +1,7 @@
 package br.com.xareu.lift.Controller;
 
-import br.com.xareu.lift.DTO.MetaRequestDTO;
-import br.com.xareu.lift.DTO.MetaResponseDTO;
+import br.com.xareu.lift.DTO.Meta.MetaRequestDTO;
+import br.com.xareu.lift.DTO.Meta.MetaResponseDTO;
 import br.com.xareu.lift.Service.MetaService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;

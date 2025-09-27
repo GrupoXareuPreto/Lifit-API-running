@@ -21,14 +21,14 @@ public class Evento {
     @Column(name = "TX_TITULO", nullable = false)
     private String titulo;
 
+    @Column(name = "IMG", nullable = false)
+    private String midia;
+
     @Column(name = "TX_DESCRICAO")
     private String descricao;
 
     @Column(name = "TX_LOCALIZACAO",nullable = false)
     private String localizacao;
-
-    @Column(name = "TX_ATIVIDADE")
-    private String atividade;
 
     @Column(name = "DT_INICIO" , nullable = false)
     private LocalDateTime dataInicio;

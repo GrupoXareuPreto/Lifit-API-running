@@ -24,6 +24,8 @@ public class ConversaService {
         return repository.findAll();
     }
 
+
+
     public Optional<Conversa> atualizarConversa(Conversa conversaAtualizada, Long id){
         return repository.findById(id).map(conversa -> {
             conversa.setDescricao(conversaAtualizada.getDescricao());
@@ -33,6 +35,7 @@ public class ConversaService {
             return repository.save(conversa);
         });
     }
+
 
     public boolean excluirConversa(Long id){
         if(repository.existsById(id)){

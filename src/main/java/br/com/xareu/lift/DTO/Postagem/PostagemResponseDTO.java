@@ -1,5 +1,6 @@
-package br.com.xareu.lift.DTO;
+package br.com.xareu.lift.DTO.Postagem;
 
+import br.com.xareu.lift.DTO.Usuario.UsuarioResponseCardPostagemDTO;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -11,7 +12,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 public class PostagemResponseDTO {
 
-    private UsuarioCardPostagemDTO cardUsuario;
+    private UsuarioResponseCardPostagemDTO cardUsuario;
     private String midia;
     private String titulo;
     private String descricao;

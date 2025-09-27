@@ -61,9 +61,6 @@ public class Usuario {
     @OneToMany(mappedBy = "autor",   cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Mensagem> mensagens;
 
-    @OneToMany(mappedBy = "autor", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Compartilhamento> compartilhamentos;
-
     @ManyToMany
     @JoinTable(
             name = "TBL_USUARIO_EVENTO",

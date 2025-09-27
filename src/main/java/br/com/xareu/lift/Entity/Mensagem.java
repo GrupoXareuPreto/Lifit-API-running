@@ -37,7 +37,7 @@ public class Mensagem {
     @JoinColumn(name = "ID_USUARIO", nullable = false)
     private Usuario autor;
 
-    @OneToOne(mappedBy = "mensagem", cascade = CascadeType.ALL)
-    private Compartilhamento compartilhamento;
-
+    @OneToOne
+    @JoinColumn(name = "ID_POSTAGEM")
+    private Postagem postagem = null;
 }

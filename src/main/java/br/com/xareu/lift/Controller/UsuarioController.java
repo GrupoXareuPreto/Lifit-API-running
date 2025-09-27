@@ -1,7 +1,7 @@
 package br.com.xareu.lift.Controller;
 
-import br.com.xareu.lift.DTO.UsuarioRequestDTO;
-import br.com.xareu.lift.DTO.UsuarioResponseDTO;
+import br.com.xareu.lift.DTO.Usuario.UsuarioRequestDTO;
+import br.com.xareu.lift.DTO.Usuario.UsuarioResponseDTO;
 import br.com.xareu.lift.Service.UsuarioService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;

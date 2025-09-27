@@ -1,7 +1,7 @@
 package br.com.xareu.lift.Service;
 
-import br.com.xareu.lift.DTO.PostagemRequestDTO;
-import br.com.xareu.lift.DTO.PostagemResponseDTO;
+import br.com.xareu.lift.DTO.Postagem.PostagemRequestDTO;
+import br.com.xareu.lift.DTO.Postagem.PostagemResponseDTO;
 import br.com.xareu.lift.Entity.Postagem;
 import br.com.xareu.lift.Entity.Usuario;
 import br.com.xareu.lift.Repository.PostagemRepository;
@@ -41,7 +41,7 @@ public class PostagemService {
                     postagem.getDataPublicacao(),
                     postagem.getCurtidas() != null ? postagem.getCurtidas().size() : 0,
                     postagem.getComentarios() != null ? postagem.getComentarios().size() : 0,
-                    postagem.getCompartilhamentos() != null ? postagem.getCompartilhamentos().size() : 0
+                    postagem.getCompartilhamentos()
             );
         }
     }

@@ -1,7 +1,6 @@
 package br.com.xareu.lift.Controller;
 
 import br.com.xareu.lift.Entity.Comentario;
-import br.com.xareu.lift.Entity.Compartilhamento;
 import br.com.xareu.lift.Service.ComentarioService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;

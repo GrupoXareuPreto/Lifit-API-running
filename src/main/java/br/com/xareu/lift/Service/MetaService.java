@@ -1,7 +1,7 @@
 package br.com.xareu.lift.Service;
 
-import br.com.xareu.lift.DTO.MetaRequestDTO;
-import br.com.xareu.lift.DTO.MetaResponseDTO;
+import br.com.xareu.lift.DTO.Meta.MetaRequestDTO;
+import br.com.xareu.lift.DTO.Meta.MetaResponseDTO;
 import br.com.xareu.lift.Entity.Meta;
 import br.com.xareu.lift.Entity.Usuario;
 import br.com.xareu.lift.Repository.MetaRepository;

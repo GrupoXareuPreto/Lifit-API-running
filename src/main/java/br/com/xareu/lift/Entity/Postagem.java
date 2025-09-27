@@ -31,6 +31,9 @@ public class Postagem {
     @Column(name = "TX_DESCRICAO")
     private String descricao;
 
+    @Column(name = "NM_COMPARTILHAMENTOS")
+    private int compartilhamentos;
+
     @Column(name = "DT_PUBLICACAO", nullable = false)
     private LocalDateTime dataPublicacao = LocalDateTime.now();
 
@@ -40,11 +43,10 @@ public class Postagem {
     @OneToMany(mappedBy = "postagem")
     private List<Comentario> comentarios;
 
-    @OneToMany(mappedBy = "postagem")
-    private List<Compartilhamento> compartilhamentos;
-
-    /*preciso ver isso com a marion || quiteria*/
     @ManyToOne
     @JoinColumn(name = "ID_USUARIO", nullable = false)
     private Usuario autor;
+
+    @OneToOne
+    private Mensagem mensagem;
 }

@@ -1,7 +1,6 @@
-package br.com.xareu.lift.DTO;
+package br.com.xareu.lift.DTO.Meta;
 
 import br.com.xareu.lift.Enum.StatusMetaEnum;
-import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;

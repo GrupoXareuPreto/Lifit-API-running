@@ -31,7 +31,6 @@ public class EventoService {
 
     public Optional<Evento> atualizarEvento(Evento atualizacao, Long id){
         return repository.findById(id).map(eventoAtualizado -> {
-            eventoAtualizado.setAtividade(atualizacao.getAtividade());
             eventoAtualizado.setDescricao(atualizacao.getDescricao());
             eventoAtualizado.setLocalizacao(atualizacao.getLocalizacao());
             eventoAtualizado.setDataInicio(atualizacao.getDataInicio());

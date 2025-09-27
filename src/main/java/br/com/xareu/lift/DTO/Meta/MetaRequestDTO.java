@@ -1,4 +1,4 @@
-package br.com.xareu.lift.DTO;
+package br.com.xareu.lift.DTO.Meta;
 
 import br.com.xareu.lift.Enum.StatusMetaEnum;
 import jakarta.validation.constraints.Future;

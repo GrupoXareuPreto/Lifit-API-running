@@ -1,5 +1,6 @@
 package br.com.xareu.lift.Controller;
 
+import br.com.xareu.lift.DTO.Usuario.UsuarioRequestAutenticarDTO;
 import br.com.xareu.lift.DTO.Usuario.UsuarioRequestDTO;
 import br.com.xareu.lift.DTO.Usuario.UsuarioResponseDTO;
 import br.com.xareu.lift.Service.UsuarioService;
@@ -8,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.client.HttpClientErrorException;
 
 import java.util.List;
 
@@ -70,4 +72,15 @@ public class    UsuarioController {
             return ResponseEntity.notFound().build();
         }
     }
+
+    @PostMapping("/autenticar")
+    public ResponseEntity<Void> autenticarUsuario(@Valid @RequestBody UsuarioRequestAutenticarDTO credenciais){
+        if (service.autenticarUsuario(credenciais)){
+            return ResponseEntity.ok().build();
+        }else {
+            return ResponseEntity.badRequest().build();
+        }
+    }
+
+
 }

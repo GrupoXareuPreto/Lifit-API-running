@@ -1,9 +1,6 @@
 package br.com.xareu.lift.Service;
 
-import br.com.xareu.lift.DTO.Usuario.UsuarioResponseCardConversaDTO;
-import br.com.xareu.lift.DTO.Usuario.UsuarioRequestDTO;
-import br.com.xareu.lift.DTO.Usuario.UsuarioResponseDTO;
-import br.com.xareu.lift.DTO.Usuario.UsuarioResponseCardPostagemDTO;
+import br.com.xareu.lift.DTO.Usuario.*;
 import br.com.xareu.lift.Entity.Usuario;
 import br.com.xareu.lift.Repository.UsuarioRepository;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -119,5 +116,19 @@ public class UsuarioService {
             return true;
         }
         return false;
+    }
+
+    public boolean autenticarUsuario(UsuarioRequestAutenticarDTO credenciais){
+        try{
+            Usuario usuario = repository.findByNomeUsuario(credenciais.getNomeUsuarioOuEmail()).get();
+            if (usuario.getSenha()==credenciais.getSenha()){
+                return true;
+            }else {
+                return false;
+            }
+        }catch (Exception ex){
+            return false;
+        }
+
     }
 }

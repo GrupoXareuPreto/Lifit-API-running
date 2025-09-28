@@ -18,8 +18,8 @@ public class PostagemController {
     @Autowired
     private PostagemService service;
 
-    @PostMapping("usuario/{idAutor}")
-    public ResponseEntity<PostagemResponseDTO> criarPostagem(@Valid @RequestBody PostagemRequestDTO postagemNova, @PathVariable Long idAutor){
+    @PostMapping("/{idAutor}")
+    public ResponseEntity<PostagemResponseDTO> criarPostagem(@Valid @RequestBody PostagemResponseDTO postagemNova, @PathVariable Long idAutor){
         try{
             PostagemResponseDTO postagem = service.criarPostagem(postagemNova, idAutor);
             return new ResponseEntity<>(postagem, HttpStatus.CREATED);

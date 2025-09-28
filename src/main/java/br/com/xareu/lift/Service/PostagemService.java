@@ -8,6 +8,7 @@ import br.com.xareu.lift.Repository.PostagemRepository;
 import br.com.xareu.lift.Repository.UsuarioRepository;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -57,6 +58,7 @@ public class PostagemService {
         postagem.setTitulo(postagemDTO.getTitulo());
         postagem.setDescricao(postagemDTO.getDescricao());
         postagem.setAutor(autor);
+
 
         Postagem postagemNova = repository.save(postagem);
         return toResponseDTO(postagemNova);

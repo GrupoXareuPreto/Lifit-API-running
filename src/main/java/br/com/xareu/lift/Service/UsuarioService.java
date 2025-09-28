@@ -6,6 +6,7 @@ import br.com.xareu.lift.Repository.UsuarioRepository;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.io.Console;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -76,15 +77,19 @@ public class UsuarioService {
     }
 
     public UsuarioResponseDTO criarUsuario(UsuarioRequestDTO usuarioDTO){
+
         if (repository.findByEmail(usuarioDTO.getEmail()).isPresent()){
+            System.out.println("IF 1");
             throw  new IllegalArgumentException("Email já existe");
         }
         if(repository.findByNomeUsuario(usuarioDTO.getNomeUsuario()).isPresent()){
+            System.out.println("IF 2");
             throw new IllegalArgumentException("Nome de Usuario já existe");
         }
-
+        System.out.println("Passou os ifs");
         Usuario usuario = toEntity(usuarioDTO);
         Usuario usuarioSalvo = repository.save(usuario);
+        System.out.println("Passou o repository");
         return toResponseDTO(usuarioSalvo);
     }
 
@@ -118,16 +123,21 @@ public class UsuarioService {
         return false;
     }
 
-    public boolean autenticarUsuario(UsuarioRequestAutenticarDTO credenciais){
+    public Optional<UsuarioResponseDTO> autenticarUsuario(UsuarioRequestAutenticarDTO credenciais){
         try{
-            Usuario usuario = repository.findByNomeUsuario(credenciais.getNomeUsuarioOuEmail()).get();
-            if (usuario.getSenha()==credenciais.getSenha()){
-                return true;
-            }else {
-                return false;
+            Optional<Usuario> usuarioOptional = repository.findByNomeUsuario(credenciais.getNomeUsuario());
+            if (usuarioOptional.isEmpty()){
+                return Optional.empty();
             }
+            Usuario usuario = usuarioOptional.get();
+            if(passwordEncoder.matches(credenciais.getSenha(), usuario.getSenha())){
+                return Optional.of(toResponseDTO(usuario));
+            }
+            return Optional.empty();
+
         }catch (Exception ex){
-            return false;
+            System.out.println("ERRO"+ex.getMessage());
+            return Optional.empty();
         }
 
     }

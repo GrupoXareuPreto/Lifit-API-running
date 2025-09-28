@@ -11,7 +11,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.HttpClientErrorException;
 
+import java.io.Console;
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/usuario")
@@ -52,6 +54,7 @@ public class    UsuarioController {
             return new ResponseEntity<>(novoUsuario, HttpStatus.CREATED);
         }
         catch (IllegalArgumentException e){
+
             return ResponseEntity.status(HttpStatus.CONFLICT).build();
         }
     }
@@ -74,11 +77,12 @@ public class    UsuarioController {
     }
 
     @PostMapping("/autenticar")
-    public ResponseEntity<Void> autenticarUsuario(@Valid @RequestBody UsuarioRequestAutenticarDTO credenciais){
-        if (service.autenticarUsuario(credenciais)){
+    public ResponseEntity<UsuarioResponseDTO> autenticarUsuario(@Valid @RequestBody UsuarioRequestAutenticarDTO credenciais){
+        Optional<UsuarioResponseDTO> usuario = service.autenticarUsuario(credenciais);
+        if (usuario.isEmpty()){
             return ResponseEntity.ok().build();
         }else {
-            return ResponseEntity.badRequest().build();
+            return ResponseEntity.ok(usuario.get());
         }
     }
 

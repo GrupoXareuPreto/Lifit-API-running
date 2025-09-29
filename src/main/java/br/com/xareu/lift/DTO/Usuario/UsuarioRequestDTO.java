@@ -17,8 +17,6 @@ public class UsuarioRequestDTO {
     @NotBlank(message = "O nome é obrigatório")
     private String nome;
 
-    private String biografia;
-
     @NotBlank(message = "O email é obrigatório")
     @Email(message = "O email deve ser válido")
     private String email;
@@ -30,5 +28,7 @@ public class UsuarioRequestDTO {
     @NotBlank(message = "O nome de usuario é obrigatório")
     @Size(min = 3, max = 10, message = "O nome de usuario deve ter entre 3 a 20 caracteres")
     private String nomeUsuario;
+
+    private String biografia;
 
 }

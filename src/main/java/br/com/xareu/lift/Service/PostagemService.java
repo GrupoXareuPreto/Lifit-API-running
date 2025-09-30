@@ -50,13 +50,14 @@ public class PostagemService {
 
 /*--------------------------------------------------------------------------------------------------------------------*/
 
-    public PostagemResponseDTO criarPostagem (PostagemRequestDTO postagemDTO, Long autorId){
-        Usuario autor = usuarioRepository.findById(autorId).orElseThrow(() -> new IllegalArgumentException("Autor nao encontrado" + autorId));
+    public PostagemResponseDTO criarPostagem (PostagemRequestDTO postagemDTO){
+        Usuario autor = usuarioRepository.findById(postagemDTO.getIdAutor()).orElseThrow(() -> new IllegalArgumentException("Autor nao encontrado, id enviado: " + postagemDTO.getIdAutor()));
 
         Postagem postagem = new Postagem();
         postagem.setMidia(postagemDTO.getMidia());
         postagem.setTitulo(postagemDTO.getTitulo());
         postagem.setDescricao(postagemDTO.getDescricao());
+        postagem.setDataPublicacao(postagemDTO.getDataPublicacao());
         postagem.setAutor(autor);
 
 

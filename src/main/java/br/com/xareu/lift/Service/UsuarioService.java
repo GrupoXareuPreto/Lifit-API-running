@@ -86,10 +86,10 @@ public class UsuarioService {
             System.out.println("IF 2");
             throw new IllegalArgumentException("Nome de Usuario já existe");
         }
-        System.out.println("Passou os ifs");
+        //System.out.println("Passou os ifs");
         Usuario usuario = toEntity(usuarioDTO);
         Usuario usuarioSalvo = repository.save(usuario);
-        System.out.println("Passou o repository");
+        //System.out.println("Passou o repository");
         return toResponseDTO(usuarioSalvo);
     }
 

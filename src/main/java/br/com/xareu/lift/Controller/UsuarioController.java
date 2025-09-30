@@ -80,7 +80,7 @@ public class    UsuarioController {
     public ResponseEntity<UsuarioResponseDTO> autenticarUsuario(@Valid @RequestBody UsuarioRequestAutenticarDTO credenciais){
         Optional<UsuarioResponseDTO> usuario = service.autenticarUsuario(credenciais);
         if (usuario.isEmpty()){
-            return ResponseEntity.ok().build();
+            return ResponseEntity.badRequest().build();
         }else {
             return ResponseEntity.ok(usuario.get());
         }

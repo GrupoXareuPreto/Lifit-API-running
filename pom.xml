@@ -135,6 +135,7 @@
 				<filtering>false</filtering>
 			</resource>
 		</resources>
+        
 	</build>
 
 </project>

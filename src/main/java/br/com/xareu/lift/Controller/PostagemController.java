@@ -1,6 +1,7 @@
 // VERSÃO SEGURA E CORRETA
 package br.com.xareu.lift.Controller;
 
+import br.com.xareu.lift.DTO.Postagem.PostagemFeedResponseDTO;
 import br.com.xareu.lift.DTO.Postagem.PostagemRequestCriarDTO;
 import br.com.xareu.lift.DTO.Postagem.PostagemResponseFeedDTO;
 import br.com.xareu.lift.Entity.Usuario;
@@ -13,6 +14,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @RestController
@@ -53,6 +55,17 @@ public class PostagemController {
         List<PostagemResponseFeedDTO> minhasPostagens = postagemService.getPostagensByAutor(usuarioLogado);
         return ResponseEntity.ok(minhasPostagens);
     }
+
+    @GetMapping("/feed")
+    public ResponseEntity<PostagemFeedResponseDTO> getFeedInfinito(
+            @AuthenticationPrincipal Usuario usuarioLogado,
+            @RequestParam(required = false) LocalDateTime ultimoCursor,
+            @RequestParam(defaultValue = "10") int tamanhoPagina
+    ) {
+        PostagemFeedResponseDTO feed = postagemService.getFeedInfinito(usuarioLogado, ultimoCursor, tamanhoPagina);
+        return ResponseEntity.ok(feed);
+    }
+
 
     // Outros endpoints (GET por ID, GET todos, etc.) podem continuar existindo
     // e não precisam necessariamente do usuário logado, a menos que você tenha

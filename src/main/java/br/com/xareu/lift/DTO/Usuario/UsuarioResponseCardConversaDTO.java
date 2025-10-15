@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class UsuarioResponseCardConversaDTO {
 
+    private Long id;
     private String fotoPerfil;
     private String nome;
 }

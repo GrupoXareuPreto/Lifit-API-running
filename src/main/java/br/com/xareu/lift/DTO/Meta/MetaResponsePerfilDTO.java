@@ -10,7 +10,7 @@ import java.time.LocalDate;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class MetaResponseDTO {
+public class MetaResponsePerfilDTO {
 
     private String nome;
     private boolean publica;

@@ -1,11 +1,13 @@
 package br.com.xareu.lift.DTO.Evento;
 
-import br.com.xareu.lift.DTO.Usuario.UsuarioResponseCardPostagemDTO;
+import br.com.xareu.lift.DTO.Comentario.ComentarioResponseDTO;
+import br.com.xareu.lift.DTO.Usuario.UsuarioResponseCardPostagemEventoDTO;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 
 @Data
@@ -14,9 +16,11 @@ import java.time.LocalDateTime;
 
 public class EventoResponseFeedDTO
 {
+    private UsuarioResponseCardPostagemEventoDTO autor;
     private String midia;
-    private UsuarioResponseCardPostagemDTO autor;
     private LocalDateTime dataInicio;
-    private Long Compartilhamentos;
+    private int numCurtidas;
+    private int numComentarios;
+    private int numCompartilhamentos;
 }
 

@@ -7,10 +7,8 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class UsuarioResponseCardPostagemDTO {
+public class UsuarioResponseComentarioDTO {
 
-    private String fotoPerfil;
-    private String nome;
+    private String fotoUsuario;
     private String nomeUsuario;
-
 }

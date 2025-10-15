@@ -40,7 +40,18 @@ public class Evento {
     @JoinColumn(name = "ID_USUARIO", nullable = false)
     private Usuario autor;
 
+    @OneToMany
+    private List<Curtida> curtidas;
+
+    @OneToMany
+    private List<Comentario> comentarios;
+
+    @Column
+    private int compartilhamentos;
+
     @ManyToMany(mappedBy = "eventosParticipar")
     private List<Usuario> participantes;
+
+
 
 }

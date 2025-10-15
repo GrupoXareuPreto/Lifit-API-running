@@ -1,19 +1,17 @@
 package br.com.xareu.lift.Controller;
 
-import br.com.xareu.lift.DTO.Usuario.UsuarioRequestAutenticarDTO;
 import br.com.xareu.lift.DTO.Usuario.UsuarioRequestDTO;
-import br.com.xareu.lift.DTO.Usuario.UsuarioResponseDTO;
+import br.com.xareu.lift.DTO.Usuario.UsuarioResponsePerfilDTO;
+import br.com.xareu.lift.Entity.Usuario;
 import br.com.xareu.lift.Service.UsuarioService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.client.HttpClientErrorException;
 
-import java.io.Console;
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/usuario")
@@ -29,62 +27,50 @@ public class    UsuarioController {
 
 
     @GetMapping
-    public ResponseEntity<List<UsuarioResponseDTO>> listarTodos() {
-        List<UsuarioResponseDTO> usuarios = service.getAll();
+    public ResponseEntity<List<UsuarioResponsePerfilDTO>> listarTodos() {
+        List<UsuarioResponsePerfilDTO> usuarios = service.getAll();
         return ResponseEntity.ok(usuarios);
-
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<UsuarioResponseDTO> buscarPorId(@PathVariable Long id){
-         UsuarioResponseDTO usuario = service.buscarPorId(id);
-         if (usuario != null){
-             return ResponseEntity.ok(usuario);
-         }
-         else {
-             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-         }
+    public ResponseEntity<UsuarioResponsePerfilDTO> buscarPorId(@PathVariable Long id) {
+        UsuarioResponsePerfilDTO usuario = service.buscarPorId(id);
+        if (usuario != null) {
+            return ResponseEntity.ok(usuario);
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
     }
 
 
     @PostMapping
-    public ResponseEntity<UsuarioResponseDTO> criarUsuario(@Valid @RequestBody UsuarioRequestDTO usuarioDTO){
-        try{
-            UsuarioResponseDTO novoUsuario = service.criarUsuario(usuarioDTO);
+    public ResponseEntity<UsuarioResponsePerfilDTO> criarUsuario(@Valid @RequestBody UsuarioRequestDTO usuarioDTO) {
+        try {
+            UsuarioResponsePerfilDTO novoUsuario = service.criarUsuario(usuarioDTO);
             return new ResponseEntity<>(novoUsuario, HttpStatus.CREATED);
-        }
-        catch (IllegalArgumentException e){
-
+        } catch (IllegalArgumentException e) {
             return ResponseEntity.status(HttpStatus.CONFLICT).build();
         }
     }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<UsuarioResponseDTO> atualizarUsuario(@Valid @RequestBody UsuarioRequestDTO usuarioDTO,  @PathVariable Long id){
-        return service.atualizarUsuario(usuarioDTO, id).map(ResponseEntity :: ok).orElse(ResponseEntity.notFound().build());
+    @PutMapping("/me")
+    public ResponseEntity<UsuarioResponsePerfilDTO> atualizarMeuPerfil(
+            @Valid @RequestBody UsuarioRequestDTO usuarioDTO,
+            @AuthenticationPrincipal Usuario usuarioLogado) {
+
+        UsuarioResponsePerfilDTO usuarioAtualizado = service.atualizarUsuarioLogado(usuarioDTO, usuarioLogado);
+        return ResponseEntity.ok(usuarioAtualizado);
     }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deletarUsuario(@PathVariable Long id){
-        boolean deletado = service.deletarUsuario(id);
-
-        if(deletado){
-            return ResponseEntity.noContent().build();
-        }
-        else {
-            return ResponseEntity.notFound().build();
-        }
+    @DeleteMapping("/me")
+    public ResponseEntity<Void> deletarMinhaConta(@AuthenticationPrincipal Usuario usuarioLogado) {
+        service.deletarUsuarioLogado(usuarioLogado);
+        return ResponseEntity.noContent().build();
     }
 
-    @PostMapping("/autenticar")
-    public ResponseEntity<UsuarioResponseDTO> autenticarUsuario(@Valid @RequestBody UsuarioRequestAutenticarDTO credenciais){
-        Optional<UsuarioResponseDTO> usuario = service.autenticarUsuario(credenciais);
-        if (usuario.isEmpty()){
-            return ResponseEntity.badRequest().build();
-        }else {
-            return ResponseEntity.ok(usuario.get());
-        }
+    @GetMapping("/me")
+    public ResponseEntity<UsuarioResponsePerfilDTO> getMeuPerfil(@AuthenticationPrincipal Usuario usuarioLogado) {
+        UsuarioResponsePerfilDTO meuPerfil = service.buscarPorId(usuarioLogado.getId());
+        return ResponseEntity.ok(meuPerfil);
     }
-
-
 }

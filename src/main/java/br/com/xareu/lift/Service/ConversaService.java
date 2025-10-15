@@ -1,45 +1,119 @@
 package br.com.xareu.lift.Service;
 
+import br.com.xareu.lift.DTO.Conversa.ConversaRequestDTO;
+import br.com.xareu.lift.DTO.Conversa.ConversaResponseDTO;
+import br.com.xareu.lift.DTO.Curtida.CurtidaResponseDTO;
+import br.com.xareu.lift.DTO.Usuario.UsuarioResponseCardConversaDTO;
 import br.com.xareu.lift.Entity.Conversa;
+import br.com.xareu.lift.Entity.Curtida;
+import br.com.xareu.lift.Entity.Usuario;
 import br.com.xareu.lift.Repository.ConversaRepository;
+import br.com.xareu.lift.Repository.UsuarioRepository;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class ConversaService {
-    private ConversaRepository repository;
+    private final ConversaRepository conversaRepository;
+    private final UsuarioRepository usuarioRepository;
 
-    public ConversaService(ConversaRepository conversaRepository){
-        this.repository = conversaRepository;
+    public ConversaService(ConversaRepository conversaRepository, UsuarioRepository usuarioRepository) {
+        this.conversaRepository = conversaRepository;
+        this.usuarioRepository = usuarioRepository;
+    }
+/*--------------------------------------------------------------------------------------------------------------------*/
+/*parte de DTOs*/
+
+
+
+    private ConversaResponseDTO toResponseDTO(Conversa conversa) {
+        List<UsuarioResponseCardConversaDTO> integrantesDTO = conversa.getIntegrantes().stream()
+                .map(u -> new UsuarioResponseCardConversaDTO(u.getId(), u.getNomeUsuario(), u.getFotoPerfil()))
+                .collect(Collectors.toList());
+
+        return new ConversaResponseDTO(
+                conversa.getId(),
+                conversa.getTitulo(),
+                conversa.getFoto(),
+                conversa.getDescricao(),
+                integrantesDTO
+        );
     }
 
-    public Conversa criarconversa(Conversa conversaNova){
-        return repository.save(conversaNova);
+
+/*--------------------------------------------------------------------------------------------------------------------*/
+
+
+
+
+
+    @Transactional
+    public ConversaResponseDTO criarConversa(ConversaRequestDTO dto, Usuario criador) {
+        // Busca os integrantes no banco de dados a partir dos IDs
+        List<Usuario> integrantes = usuarioRepository.findAllById(dto.getIntegranteIds());
+        // Adiciona o próprio criador à lista de integrantes
+        integrantes.add(criador);
+
+        if (integrantes.size() < 2) {
+            throw new IllegalArgumentException("Uma conversa precisa de pelo menos 2 integrantes.");
+        }
+
+        Conversa novaConversa = new Conversa();
+        novaConversa.setIntegrantes(integrantes);
+
+        // Lógica para título: se for uma conversa de 2 pessoas, o título pode ser o nome do outro.
+        // Se for em grupo, usa o título do DTO.
+        if (integrantes.size() == 2) {
+            Usuario outroUsuario = integrantes.stream().filter(u -> !u.getId().equals(criador.getId())).findFirst().get();
+            novaConversa.setTitulo(outroUsuario.getNomeUsuario());
+        } else {
+            novaConversa.setTitulo(dto.getTitulo());
+            novaConversa.setFoto(dto.getFoto());
+            novaConversa.setDescricao(dto.getDescricao());
+        }
+
+        Conversa conversaSalva = conversaRepository.save(novaConversa);
+
+        // Atualiza a lista de conversas de cada integrante
+        for (Usuario integrante : integrantes) {
+            if (integrante.getConversas() == null) {
+                integrante.setConversas(new ArrayList<>());
+            }
+            integrante.getConversas().add(conversaSalva);
+            usuarioRepository.save(integrante);
+        }
+
+        return toResponseDTO(conversaSalva);
     }
 
-    public List<Conversa> getAll(){
-        return repository.findAll();
+    public List<ConversaResponseDTO> getMinhasConversas(Usuario usuarioLogado) {
+        return conversaRepository.findAllByIntegrantes_Id(usuarioLogado.getId()).stream()
+                .map(this::toResponseDTO)
+                .collect(Collectors.toList());
     }
 
 
 
     public Optional<Conversa> atualizarConversa(Conversa conversaAtualizada, Long id){
-        return repository.findById(id).map(conversa -> {
+        return conversaRepository.findById(id).map(conversa -> {
             conversa.setDescricao(conversaAtualizada.getDescricao());
             conversa.setFoto(conversaAtualizada.getFoto());
             conversa.setIntegrantes(conversaAtualizada.getIntegrantes());
 
-            return repository.save(conversa);
+            return conversaRepository.save(conversa);
         });
     }
 
 
     public boolean excluirConversa(Long id){
-        if(repository.existsById(id)){
-            repository.deleteById(id);
+        if(conversaRepository.existsById(id)){
+            conversaRepository.deleteById(id);
             return true;
         }
         else{

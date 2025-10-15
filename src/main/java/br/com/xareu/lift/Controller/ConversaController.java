@@ -1,42 +1,41 @@
 package br.com.xareu.lift.Controller;
 
+import br.com.xareu.lift.DTO.Conversa.ConversaRequestDTO;
+import br.com.xareu.lift.DTO.Conversa.ConversaResponseDTO;
 import br.com.xareu.lift.Entity.Conversa;
+import br.com.xareu.lift.Entity.Usuario;
 import br.com.xareu.lift.Service.ConversaService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
-@RequestMapping("/conversa")
+@RequestMapping("/conversas")
 public class ConversaController {
 
-    @Autowired
-    private ConversaService service;
+    private final ConversaService service;
 
-    @GetMapping
-    public List<Conversa> getAll(){
-        return service.getAll();
+    public ConversaController(ConversaService service) {
+        this.service = service;
     }
 
     @PostMapping
-    public Conversa  criarConversa(@RequestBody Conversa conversaNova){
-        return  service.criarconversa(conversaNova);
+    public ResponseEntity<ConversaResponseDTO> criarConversa(
+            @Valid @RequestBody ConversaRequestDTO dto,
+            @AuthenticationPrincipal Usuario usuarioLogado) {
+
+        ConversaResponseDTO novaConversa = service.criarConversa(dto, usuarioLogado);
+        return new ResponseEntity<>(novaConversa, HttpStatus.CREATED);
     }
 
-    @PutMapping("{id}")
-    public ResponseEntity<?> atualizarConversa(@RequestBody Conversa conversa, @PathVariable Long id){
-        return service.atualizarConversa(conversa, id).map(ResponseEntity::ok).orElse(ResponseEntity.notFound().build());
-    }
-
-    @DeleteMapping("{id}")
-    public ResponseEntity<?> deletarConversa(@PathVariable Long id){
-        if (service.excluirConversa(id)){
-            return ResponseEntity.ok().body("Conversa apagada com sucesso!!");
-        }
-        else {
-            return ResponseEntity.notFound().build();
-        }
+    @GetMapping("/me")
+    public ResponseEntity<List<ConversaResponseDTO>> getMinhasConversas(@AuthenticationPrincipal Usuario usuarioLogado) {
+        List<ConversaResponseDTO> conversas = service.getMinhasConversas(usuarioLogado);
+        return ResponseEntity.ok(conversas);
     }
 }

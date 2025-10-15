@@ -1,14 +1,18 @@
 package br.com.xareu.lift.Service;
 
-import br.com.xareu.lift.DTO.Postagem.PostagemRequestDTO;
-import br.com.xareu.lift.DTO.Postagem.PostagemResponseDTO;
+import br.com.xareu.lift.DTO.Postagem.PostagemRequestCriarDTO;
+import br.com.xareu.lift.DTO.Postagem.PostagemResponseFeedDTO;
+import br.com.xareu.lift.DTO.Postagem.PostagemResponseImagemDTO;
 import br.com.xareu.lift.Entity.Postagem;
 import br.com.xareu.lift.Entity.Usuario;
+import br.com.xareu.lift.Mapper.PostagemMapper;
 import br.com.xareu.lift.Repository.PostagemRepository;
 import br.com.xareu.lift.Repository.UsuarioRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -29,16 +33,15 @@ public class PostagemService {
 /*Parte de DTOs*/
 
 
-    private PostagemResponseDTO toResponseDTO(Postagem postagem){
+   /* private PostagemResponseFeedDTO toResponseDTO(Postagem postagem){
         if(postagem == null){
             return null;
         }
         else {
-            return new PostagemResponseDTO(
-                    usuarioService.toUsuarioCardPostagemDTO(postagem.getAutor()),
+            return new PostagemResponseFeedDTO(
+                    usuarioService.toUsuarioCardPostagemEventoDTO(postagem.getAutor()),
                     postagem.getMidia(),
                     postagem.getTitulo(),
-                    postagem.getDescricao(),
                     postagem.getDataPublicacao(),
                     postagem.getCurtidas() != null ? postagem.getCurtidas().size() : 0,
                     postagem.getComentarios() != null ? postagem.getComentarios().size() : 0,
@@ -47,38 +50,56 @@ public class PostagemService {
         }
     }
 
+    public PostagemResponseImagemDTO toPostagemResponseImagemDTO(Postagem postagem){
+        if(postagem == null){
+            return null;
+        }
+        else {
+            return new PostagemResponseImagemDTO(
+                    postagem.getMidia()
+            );
+        }
+    }
+*/
 
 /*--------------------------------------------------------------------------------------------------------------------*/
 
-    public PostagemResponseDTO criarPostagem (PostagemRequestDTO postagemDTO){
-        Usuario autor = usuarioRepository.findById(postagemDTO.getIdAutor()).orElseThrow(() -> new IllegalArgumentException("Autor nao encontrado, id enviado: " + postagemDTO.getIdAutor()));
+    @Autowired
+    private PostagemRepository postagemRepository;
 
+    @Autowired
+    private PostagemMapper postagemMapper;
+
+    @Transactional
+    public PostagemResponseFeedDTO criarPostagem(PostagemRequestCriarDTO dto, Usuario autor) {
         Postagem postagem = new Postagem();
-        postagem.setMidia(postagemDTO.getMidia());
-        postagem.setTitulo(postagemDTO.getTitulo());
-        postagem.setDescricao(postagemDTO.getDescricao());
-        postagem.setDataPublicacao(postagemDTO.getDataPublicacao());
         postagem.setAutor(autor);
+        postagem.setMidia(dto.getMidia());
+        postagem.setDescricao(dto.getDescricao());
+        postagem.setTitulo(dto.getTitulo());
 
 
-        Postagem postagemNova = repository.save(postagem);
-        return toResponseDTO(postagemNova);
+        Postagem savedPostagem = postagemRepository.save(postagem);
+        return postagemMapper.toResponseFeedDTO(savedPostagem);
     }
 
 
+    @Transactional
+    public void deletePostagem(Long postagemId, Usuario usuarioLogado) throws IllegalAccessException {
 
-    public List<PostagemResponseDTO> getFeed(){
-      return repository.findAll().stream().map(this::toResponseDTO).collect(Collectors.toList());
+        Postagem postagem = postagemRepository.findById(postagemId)
+                .orElseThrow(() -> new RuntimeException("Postagem não encontrada"));
+
+        if (!postagem.getAutor().getId().equals(usuarioLogado.getId())) {
+            throw new IllegalAccessException("Você não tem permissão para deletar esta postagem.");
+        }
+
+        postagemRepository.delete(postagem);
     }
 
 
-    public boolean deletarPostagem(Long id){
-        if(repository.existsById(id)){
-            repository.deleteById(id);
-            return true;
-        }
-        else{
-            return false;
-        }
+    public List<PostagemResponseFeedDTO> getPostagensByAutor(Usuario autor) {
+        List<Postagem> postagens = postagemRepository.findByAutor(autor);
+        return postagemMapper.toResponseFeedDTOList(postagens);
     }
 }

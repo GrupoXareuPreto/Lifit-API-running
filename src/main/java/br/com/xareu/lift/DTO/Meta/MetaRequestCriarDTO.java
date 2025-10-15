@@ -14,7 +14,7 @@ import java.time.LocalDateTime;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class MetaRequestDTO {
+public class MetaRequestCriarDTO {
 
     @NotBlank(message = "A meta deve conter um nome")
     private String nome;

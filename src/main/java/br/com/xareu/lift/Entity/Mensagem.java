@@ -1,11 +1,9 @@
 package br.com.xareu.lift.Entity;
 
 import br.com.xareu.lift.Enum.StatusMensagemEnum;
-import com.fasterxml.jackson.annotation.*;
 import jakarta.persistence.*;
 import lombok.Data;
-import lombok.Getter;
-import lombok.Setter;
+
 
 import java.time.LocalDateTime;
 

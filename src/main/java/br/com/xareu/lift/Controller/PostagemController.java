@@ -1,48 +1,60 @@
+// VERSÃO SEGURA E CORRETA
 package br.com.xareu.lift.Controller;
 
-import br.com.xareu.lift.DTO.Postagem.PostagemRequestDTO;
-import br.com.xareu.lift.DTO.Postagem.PostagemResponseDTO;
+import br.com.xareu.lift.DTO.Postagem.PostagemRequestCriarDTO;
+import br.com.xareu.lift.DTO.Postagem.PostagemResponseFeedDTO;
+import br.com.xareu.lift.Entity.Usuario;
 import br.com.xareu.lift.Service.PostagemService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 
 @RestController
-@RequestMapping("/postagem")
+@RequestMapping("/postagens")
 public class PostagemController {
 
     @Autowired
-    private PostagemService service;
+    private PostagemService postagemService;
 
-    @PostMapping("/postar")
-    public ResponseEntity<PostagemResponseDTO> criarPostagem(@Valid @RequestBody PostagemRequestDTO postagemNova){
-        try{
-            PostagemResponseDTO postagem = service.criarPostagem(postagemNova);
-            return new ResponseEntity<>(postagem, HttpStatus.CREATED);
-        }
-        catch (IllegalArgumentException e){
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
-        }
+
+    @PostMapping
+    public ResponseEntity<PostagemResponseFeedDTO> createPostagem(
+            @Valid @RequestBody PostagemRequestCriarDTO postagemDTO,
+            @AuthenticationPrincipal Usuario usuarioLogado) {
+
+        PostagemResponseFeedDTO novaPostagem = postagemService.criarPostagem(postagemDTO, usuarioLogado);
+        return new ResponseEntity<>(novaPostagem, HttpStatus.CREATED);
     }
 
-    @GetMapping("/Feed")
-    public List<PostagemResponseDTO> getAll(){
-        return service.getFeed();
-    }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<?> deletarPostagem(@PathVariable Long id){
-        boolean deletado = service.deletarPostagem(id);
+    public ResponseEntity<Void> deletePostagem(
+            @PathVariable Long id,
+            @AuthenticationPrincipal Usuario usuarioLogado) {
 
-        if (deletado){
-            return ResponseEntity.ok().body("Postagem deletada com sucesso");
-        }
-        else{
-            return ResponseEntity.notFound().build();
+        try {
+            postagemService.deletePostagem(id, usuarioLogado);
+            return ResponseEntity.noContent().build();
+        } catch (IllegalAccessException e) {
+
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, e.getMessage());
         }
     }
+
+
+    @GetMapping("/me")
+    public ResponseEntity<List<PostagemResponseFeedDTO>> getMinhasPostagens(@AuthenticationPrincipal Usuario usuarioLogado) {
+        List<PostagemResponseFeedDTO> minhasPostagens = postagemService.getPostagensByAutor(usuarioLogado);
+        return ResponseEntity.ok(minhasPostagens);
+    }
+
+    // Outros endpoints (GET por ID, GET todos, etc.) podem continuar existindo
+    // e não precisam necessariamente do usuário logado, a menos que você tenha
+    // postagens privadas.
 }

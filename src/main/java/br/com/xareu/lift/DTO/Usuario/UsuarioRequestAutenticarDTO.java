@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 public class UsuarioRequestAutenticarDTO {
 
     @NotBlank(message = "Deve-se colocar um nome de usuario ou email")
-    private String nomeUsuario;
+    private String nomeUsuarioEmail;
 
     @NotBlank(message = "A senha é obrigatória")
     private String senha;

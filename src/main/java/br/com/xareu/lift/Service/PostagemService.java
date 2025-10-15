@@ -19,16 +19,6 @@ import java.util.stream.Collectors;
 @Service
 public class PostagemService {
 
-    private PostagemRepository repository;
-    private UsuarioRepository usuarioRepository;
-    private UsuarioService usuarioService;
-
-    public PostagemService(PostagemRepository postagemRepository, UsuarioRepository usuarioRepository, UsuarioService usuarioService)
-    {
-        this.repository = postagemRepository;
-        this.usuarioRepository = usuarioRepository;
-        this.usuarioService = usuarioService;
-    }
 /*--------------------------------------------------------------------------------------------------------------------*/
 /*Parte de DTOs*/
 

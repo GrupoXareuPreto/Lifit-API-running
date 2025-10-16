@@ -45,6 +45,7 @@ public class UsuarioService {
         }
 
         Usuario usuario = mapper.toEntity(usuarioDTO);
+        usuario.setSenha(passwordEncoder.encode(usuarioDTO.senha()));
         Usuario usuarioSalvo = repository.save(usuario);
         return  mapper.toResponsePerfilDTO(usuarioSalvo);
     }

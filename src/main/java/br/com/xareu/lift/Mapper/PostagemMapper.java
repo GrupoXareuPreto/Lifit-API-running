@@ -14,7 +14,7 @@ import java.util.List;
 public interface PostagemMapper {
     PostagemMapper INSTANCE = Mappers.getMapper(PostagemMapper.class);
 
-    //essa brincadeira faz "Usuario autor" virar "UsuarioResponseCardPostagemEventoDTO autor"
+    //essa brincadeira faz "Usuario autor" virar "UsuarioResponseCardPostagemEventoDTO autor" junto do uses = { UsuarioMapper.class } ali em cima
     @Mapping(source = "autor", target = "autor")
     PostagemResponseFeedDTO toResponseFeedDTO(Postagem postagem);
 

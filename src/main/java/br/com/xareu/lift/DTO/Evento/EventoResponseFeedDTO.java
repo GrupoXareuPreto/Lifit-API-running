@@ -2,6 +2,7 @@ package br.com.xareu.lift.DTO.Evento;
 
 import br.com.xareu.lift.DTO.Comentario.ComentarioResponseDTO;
 import br.com.xareu.lift.DTO.Usuario.UsuarioResponseCardPostagemEventoDTO;
+import br.com.xareu.lift.Entity.Usuario;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;

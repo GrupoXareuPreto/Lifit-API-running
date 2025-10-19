@@ -1,6 +1,7 @@
 package br.com.xareu.lift.DTO.Postagem;
 
 import br.com.xareu.lift.DTO.Usuario.UsuarioResponseCardPostagemEventoDTO;
+import br.com.xareu.lift.Entity.Usuario;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -12,7 +13,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 public class PostagemResponseFeedDTO {
 
-    private UsuarioResponseCardPostagemEventoDTO cardUsuario;
+    private UsuarioResponseCardPostagemEventoDTO autor;
     private String midia;
     private String titulo;
     private LocalDateTime dataPublicacao;

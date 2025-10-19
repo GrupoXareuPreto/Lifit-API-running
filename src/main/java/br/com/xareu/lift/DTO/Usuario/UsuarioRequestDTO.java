@@ -8,6 +8,8 @@ public record UsuarioRequestDTO(
         @NotBlank(message = "O nome é obrigatorio")
         String nome,
 
+        String fotoPerfil,
+
         String biografia,
 
         @NotBlank(message = "O email é obrigatorio")

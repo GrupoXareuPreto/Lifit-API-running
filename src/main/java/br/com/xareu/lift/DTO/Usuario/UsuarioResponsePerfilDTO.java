@@ -9,6 +9,7 @@ import java.util.List;
 
 public record UsuarioResponsePerfilDTO(
         String nome,
+        String fotoPerfil,
         String biografia,
         String email,
         String nomeUsuario,

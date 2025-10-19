@@ -1,6 +1,7 @@
 package br.com.xareu.lift.Service;
 
 import br.com.xareu.lift.DTO.Usuario.*;
+import br.com.xareu.lift.Entity.Postagem;
 import br.com.xareu.lift.Entity.Usuario;
 import br.com.xareu.lift.Mapper.UsuarioMapper;
 import br.com.xareu.lift.Repository.UsuarioRepository;
@@ -22,12 +23,7 @@ public class UsuarioService {
     private  PasswordEncoder passwordEncoder;
     @Autowired
     private  UsuarioMapper mapper;
-    @Autowired
-    private MetaService metaService;
-    @Autowired
-    private EventoService eventoService;
-    @Autowired
-    private PostagemService postagemService;
+
 
 
     public List<UsuarioResponsePerfilDTO> getAll() {
@@ -96,5 +92,13 @@ public class UsuarioService {
             return Optional.empty();
         }
 
+    }
+
+    @Transactional
+    public void adicinarPostagemNoUsuario (Usuario usuario, Postagem postagem){
+        List<Postagem> postagens = usuario.getPostagens();
+        postagens.add(postagem);
+        usuario.setPostagens(postagens);
+        repository.save(usuario);
     }
 }

@@ -96,9 +96,19 @@ public class UsuarioService {
 
     @Transactional
     public void adicinarPostagemNoUsuario (Usuario usuario, Postagem postagem){
-        List<Postagem> postagens = usuario.getPostagens();
-        postagens.add(postagem);
-        usuario.setPostagens(postagens);
-        repository.save(usuario);
+        try{
+            Usuario usuarioGerenciado = repository.findById(usuario.getId()).orElseThrow(() -> new RuntimeException("Usuário não encontrado com o ID: " + usuario.getId()));;
+            List<Postagem> postagens = usuarioGerenciado.getPostagens();
+            postagens.add(postagem);
+            usuarioGerenciado.setPostagens(postagens);
+            System.out.println("Usuario que foi salvo"+usuarioGerenciado);
+            repository.save(usuarioGerenciado);
+        }catch (Exception ex)
+        {
+            System.out.println("ERRO"+ex.getMessage());
+
+        }
+
+
     }
 }

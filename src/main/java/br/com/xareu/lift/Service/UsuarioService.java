@@ -83,12 +83,12 @@ public class UsuarioService {
 
     public Optional<UsuarioResponsePerfilDTO> autenticarUsuario(UsuarioRequestAutenticarDTO credenciais){
         try{
-            Optional<Usuario> usuarioOptional = repository.findByNomeUsuario(credenciais.getNomeUsuarioEmail());
+            Optional<Usuario> usuarioOptional = repository.findByNomeUsuario(credenciais.nomeUsuarioEmail());
             if (usuarioOptional.isEmpty()){
                 return Optional.empty();
             }
             Usuario usuario = usuarioOptional.get();
-            if(passwordEncoder.matches(credenciais.getSenha(), usuario.getSenha())){
+            if(passwordEncoder.matches(credenciais.senha(), usuario.getSenha())){
                 return Optional.of( mapper.toResponsePerfilDTO(usuario));
             }
             return Optional.empty();

@@ -56,7 +56,7 @@ public class ConversaService {
     @Transactional
     public ConversaResponseDTO criarConversa(ConversaRequestDTO dto, Usuario criador) {
         // Busca os integrantes no banco de dados a partir dos IDs
-        List<Usuario> integrantes = usuarioRepository.findAllById(dto.getIntegranteIds());
+        List<Usuario> integrantes = usuarioRepository.findAllById(dto.integranteIds());
         // Adiciona o próprio criador à lista de integrantes
         integrantes.add(criador);
 
@@ -73,9 +73,9 @@ public class ConversaService {
             Usuario outroUsuario = integrantes.stream().filter(u -> !u.getId().equals(criador.getId())).findFirst().get();
             novaConversa.setTitulo(outroUsuario.getNomeUsuario());
         } else {
-            novaConversa.setTitulo(dto.getTitulo());
-            novaConversa.setFoto(dto.getFoto());
-            novaConversa.setDescricao(dto.getDescricao());
+            novaConversa.setTitulo(dto.titulo());
+            novaConversa.setFoto(dto.foto());
+            novaConversa.setDescricao(dto.descricao());
         }
 
         Conversa conversaSalva = conversaRepository.save(novaConversa);

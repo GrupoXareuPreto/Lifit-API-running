@@ -44,7 +44,7 @@ public class CurtidaService {
     @Transactional
     public CurtidaResponseDTO criarCurtida(CurtidaRequestDTO dto, Usuario autorLogado) {
         // Busca a postagem que será curtida
-        Postagem postagem = postagemRepository.findById(dto.getPostagemId())
+        Postagem postagem = postagemRepository.findById(dto.postagemId())
                 .orElseThrow(() -> new RuntimeException("Postagem não encontrada"));
 
         // *** REGRA DE NEGÓCIO: Verifica se o usuário já curtiu este post ***

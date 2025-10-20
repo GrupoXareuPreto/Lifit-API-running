@@ -53,11 +53,11 @@ public class ComentarioService {
 
     @Transactional
     public ComentarioResponseDTO criarComentario(ComentarioRequestDTO dto, Usuario autorLogado) {
-        Postagem postagem = postagemRepository.findById(dto.getPostagemId())
+        Postagem postagem = postagemRepository.findById(dto.postagemId())
                 .orElseThrow(() -> new RuntimeException("Postagem não encontrada"));
 
         Comentario novoComentario = new Comentario();
-        novoComentario.setConteudo(dto.getConteudo());
+        novoComentario.setConteudo(dto.conteudo());
         novoComentario.setPostagem(postagem);
         novoComentario.setAutor(autorLogado); // Autor vem do token!
         novoComentario.setDataCriacao(LocalDateTime.now());

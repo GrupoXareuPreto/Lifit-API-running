@@ -36,9 +36,9 @@ public class PostagemService {
     public PostagemResponseFeedDTO criarPostagem(PostagemRequestCriarDTO dto, Usuario autor) {
         Postagem postagem = new Postagem();
         postagem.setAutor(autor);
-        postagem.setMidia(dto.getMidia());
-        postagem.setDescricao(dto.getDescricao());
-        postagem.setTitulo(dto.getTitulo());
+        postagem.setMidia(dto.midia());
+        postagem.setDescricao(dto.descricao());
+        postagem.setTitulo(dto.titulo());
 
 
         Postagem savedPostagem = postagemRepository.save(postagem);
@@ -93,7 +93,7 @@ public class PostagemService {
 
         if (!feedFinal.isEmpty()) {
             // O cursor é a data de publicação do último post retornado
-            nextCursor = feedFinal.get(feedFinal.size() - 1).getDataPublicacao();
+            nextCursor = feedFinal.get(feedFinal.size() - 1).dataPublicacao();
 
             // Verifica se ainda há posts mais antigos
             hasMore = postagemRepository.count() > feedFinal.size(); // simples, pode otimizar depois

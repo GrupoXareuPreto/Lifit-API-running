@@ -28,9 +28,9 @@ public class MetaService {
     @Transactional
     public MetaResponsePerfilDTO criarMeta(MetaRequestCriarDTO metaDTO, Usuario autor) {
         Meta meta = new Meta();
-        meta.setNome(metaDTO.getNome());
-        meta.setPublica(metaDTO.isPublica());
-        meta.setDataFim(metaDTO.getDataFim());
+        meta.setNome(metaDTO.nome());
+        meta.setPublica(metaDTO.publica());
+        meta.setDataFim(metaDTO.dataFim());
         meta.setAutor(autor);
 
         Meta savedMeta = metaRepository.save(meta);
@@ -53,10 +53,10 @@ public class MetaService {
         }
 
         // Atualiza os campos da meta existente
-        meta.setNome(metaDTO.getNome());
-        meta.setPublica(metaDTO.isPublica());
-        meta.setStatus(metaDTO.getStatus());
-        meta.setDataFim(metaDTO.getDataFim());
+        meta.setNome(metaDTO.nome());
+        meta.setPublica(metaDTO.publica());
+        meta.setStatus(metaDTO.status());
+        meta.setDataFim(metaDTO.dataFim());
         // A data de início geralmente não é alterada, mas se for, adicione: meta.setDataInicio(metaDTO.getDataInicio());
 
         Meta metaAtualizada = metaRepository.save(meta);

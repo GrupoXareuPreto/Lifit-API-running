@@ -62,7 +62,7 @@ public class MensagemService {
         }
 
         Mensagem novaMensagem = new Mensagem();
-        novaMensagem.setConteudo(dto.getConteudo());
+        novaMensagem.setConteudo(dto.conteudo());
         novaMensagem.setAutor(autorLogado);
         novaMensagem.setConversa(conversa);
         novaMensagem.setDataEnvio(LocalDateTime.now());

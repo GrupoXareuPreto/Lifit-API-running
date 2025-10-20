@@ -1,18 +1,13 @@
 package br.com.xareu.lift.DTO.Conversa;
 
 import jakarta.validation.constraints.NotEmpty;
-import lombok.Data;
-
 import java.util.List;
 
-@Data
-public class ConversaRequestDTO {
+public record ConversaRequestDTO(
+        @NotEmpty(message = "A lista de integrantes não pode ser vazia.")
+        List<Long> integranteIds,
 
-    @NotEmpty(message = "A lista de integrantes não pode ser vazia.")
-    private List<Long> integranteIds;
-
-
-    private String titulo;
-    private String foto;
-    private String descricao;
-}
+        String titulo,
+        String foto,
+        String descricao
+) {}

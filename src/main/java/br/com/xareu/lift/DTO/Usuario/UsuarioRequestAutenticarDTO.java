@@ -1,18 +1,11 @@
 package br.com.xareu.lift.DTO.Usuario;
 
 import jakarta.validation.constraints.NotBlank;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
 
-@Data
-@AllArgsConstructor
-@NoArgsConstructor
-public class UsuarioRequestAutenticarDTO {
+public record UsuarioRequestAutenticarDTO(
+        @NotBlank(message = "Deve-se colocar um nome de usuario ou email")
+        String nomeUsuarioEmail,
 
-    @NotBlank(message = "Deve-se colocar um nome de usuario ou email")
-    private String nomeUsuarioEmail;
-
-    @NotBlank(message = "A senha é obrigatória")
-    private String senha;
-}
+        @NotBlank(message = "A senha é obrigatória")
+        String senha
+) {}

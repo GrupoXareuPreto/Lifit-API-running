@@ -1,23 +1,14 @@
 package br.com.xareu.lift.DTO.Postagem;
 
 import br.com.xareu.lift.DTO.Usuario.UsuarioResponseCardPostagemEventoDTO;
-import br.com.xareu.lift.Entity.Usuario;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-
 import java.time.LocalDateTime;
 
-@Data
-@AllArgsConstructor
-@NoArgsConstructor
-public class PostagemResponseFeedDTO {
-
-    private UsuarioResponseCardPostagemEventoDTO autor;
-    private String midia;
-    private String titulo;
-    private LocalDateTime dataPublicacao;
-    private int numCurtidas;
-    private int numComentaios;
-    private int numCompartilhamentos;
-}
+public record PostagemResponseFeedDTO(
+        UsuarioResponseCardPostagemEventoDTO autor,
+        String midia,
+        String titulo,
+        LocalDateTime dataPublicacao,
+        int numCurtidas,
+        int numComentaios,
+        int numCompartilhamentos
+) {}

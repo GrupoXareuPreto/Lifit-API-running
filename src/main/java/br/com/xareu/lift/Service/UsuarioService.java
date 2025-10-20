@@ -1,9 +1,11 @@
 package br.com.xareu.lift.Service;
 
 import br.com.xareu.lift.DTO.Usuario.*;
+import br.com.xareu.lift.Entity.Evento;
 import br.com.xareu.lift.Entity.Postagem;
 import br.com.xareu.lift.Entity.Usuario;
 import br.com.xareu.lift.Mapper.UsuarioMapper;
+import br.com.xareu.lift.Repository.EventoRepository;
 import br.com.xareu.lift.Repository.PostagemRepository;
 import br.com.xareu.lift.Repository.UsuarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,6 +28,8 @@ public class UsuarioService {
     private  UsuarioMapper mapper;
     @Autowired
     private PostagemRepository postagemRepository;
+    @Autowired
+    private EventoRepository eventoRepository;
 
 
     public List<UsuarioResponsePerfilDTO> getAll() {
@@ -51,10 +55,6 @@ public class UsuarioService {
     @Transactional
     public UsuarioResponsePerfilDTO buscarPorId(Long id){
         Usuario usuario = repository.findById(id).orElseThrow(() -> new RuntimeException("Usuário não encontrado"));
-        //usuario.getPostagens().clear();
-        List<Postagem> novasPostagens = postagemRepository.findByAutor(usuario);
-        usuario.getPostagens().addAll(novasPostagens);
-        //System.out.println(usuario.getPostagens());
         return mapper.toResponsePerfilDTO(usuario);
     }
 

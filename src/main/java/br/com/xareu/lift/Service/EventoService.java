@@ -122,7 +122,7 @@ public class EventoService {
         return Optional.of(eventoMapper.toResponseFeedDTO(eventoAtualizado));
     }
 
-    public List<EventoResponsePerfilDTO> getMetasPorAutor(Usuario autor) {
-        return eventoMapper.toEventoResponsePerfilDTOList(repository.findByAutor(autor));
+    public List<EventoResponsePerfilDTO> getEventosPorAutor(Usuario autor) {
+          return eventoMapper.toEventoResponsePerfilDTOList(repository.findByAutor(autor));
     }
 }

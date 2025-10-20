@@ -30,7 +30,7 @@ public class AuthenticationController {
 
     @PostMapping("/login")
     public ResponseEntity<LoginResponseDTO> login(@RequestBody @Valid UsuarioRequestAutenticarDTO data) {
-        var usernamePassword = new UsernamePasswordAuthenticationToken(data.getNomeUsuarioEmail(), data.getSenha());
+        var usernamePassword = new UsernamePasswordAuthenticationToken(data.nomeUsuarioEmail(), data.senha());
         var auth = this.authenticationManager.authenticate(usernamePassword);
 
         // Se a autenticação for bem-sucedida, gera o token JWT

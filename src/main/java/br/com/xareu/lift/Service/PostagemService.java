@@ -3,13 +3,10 @@ package br.com.xareu.lift.Service;
 import br.com.xareu.lift.DTO.Postagem.PostagemFeedResponseDTO;
 import br.com.xareu.lift.DTO.Postagem.PostagemRequestCriarDTO;
 import br.com.xareu.lift.DTO.Postagem.PostagemResponseFeedDTO;
-import br.com.xareu.lift.DTO.Postagem.PostagemResponseImagemDTO;
 import br.com.xareu.lift.Entity.Postagem;
 import br.com.xareu.lift.Entity.Usuario;
 import br.com.xareu.lift.Mapper.PostagemMapper;
-import br.com.xareu.lift.Mapper.UsuarioMapper;
 import br.com.xareu.lift.Repository.PostagemRepository;
-import br.com.xareu.lift.Repository.UsuarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import org.springframework.stereotype.Service;
@@ -18,9 +15,8 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
+
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 
 
 @Service

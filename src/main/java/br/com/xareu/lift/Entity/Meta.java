@@ -26,7 +26,7 @@ public class Meta {
     @JoinColumn(name = "ID_USUARIO", nullable = false)
     private Usuario autor/*Dono das metas*/;
 
-    @Column(name = "TX_NOME", nullable = false, unique = true)
+    @Column(name = "TX_NOME", nullable = false)
     private String nome;
 
     @Enumerated(EnumType.STRING)

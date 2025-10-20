@@ -2,7 +2,7 @@ package br.com.xareu.lift.Mapper;
 
 
 import br.com.xareu.lift.DTO.Postagem.PostagemResponseFeedDTO;
-import br.com.xareu.lift.DTO.Postagem.PostagemResponseImagemDTO;
+import br.com.xareu.lift.DTO.Postagem.PostagemResponsePerfilDTO;
 import br.com.xareu.lift.Entity.Postagem;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -20,5 +20,5 @@ public interface PostagemMapper {
 
     List<PostagemResponseFeedDTO> toResponseFeedDTOList(List<Postagem> postagens);
 
-    PostagemResponseImagemDTO toPostagemResponseImagemDTO(Postagem postagem);
+    PostagemResponsePerfilDTO toPostagemResponsePerfilDTO(Postagem postagem);
 }

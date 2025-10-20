@@ -2,6 +2,8 @@ package br.com.xareu.lift.Controller;
 
 import br.com.xareu.lift.DTO.Evento.EventoRequestCriarDTO;
 import br.com.xareu.lift.DTO.Evento.EventoResponseFeedDTO;
+import br.com.xareu.lift.DTO.Evento.EventoResponsePerfilDTO;
+import br.com.xareu.lift.DTO.Postagem.PostagemResponsePerfilDTO;
 import br.com.xareu.lift.Entity.Usuario;
 import br.com.xareu.lift.Service.EventoService;
 import jakarta.validation.Valid;
@@ -65,5 +67,11 @@ public class EventoController {
         } catch (RuntimeException e) { // Captura o "Evento não encontrado"
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
         }
+    }
+
+    @GetMapping("/me")
+    public ResponseEntity<List<EventoResponsePerfilDTO>> getMeusEventos(@AuthenticationPrincipal Usuario usuarioLogado){
+        List<EventoResponsePerfilDTO> meusEventos = service.getEventosPorAutor(usuarioLogado);
+        return ResponseEntity.ok(meusEventos);
     }
 }

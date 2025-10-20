@@ -1,6 +1,6 @@
 package br.com.xareu.lift.DTO.Postagem;
 
-public record PostagemResponseImagemDTO(
+public record PostagemResponsePerfilDTO(
         String midia)
 {
 }

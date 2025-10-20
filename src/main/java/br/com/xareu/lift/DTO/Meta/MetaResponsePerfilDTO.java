@@ -7,13 +7,10 @@ import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
 
-@Data
-@AllArgsConstructor
-@NoArgsConstructor
-public class MetaResponsePerfilDTO {
 
-    private String nome;
-    private boolean publica;
-    private StatusMetaEnum status;
-    private LocalDate dataFim;
-}
+public record MetaResponsePerfilDTO(
+         String nome,
+         boolean publica,
+         StatusMetaEnum status,
+         LocalDate dataFim
+) { }

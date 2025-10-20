@@ -19,6 +19,8 @@ public interface PostagemRepository extends JpaRepository<Postagem, Long> {
 
     List<Postagem> findByAutor(Usuario autor);
 
+
+
     @Query("""
         SELECT p FROM Postagem p
         WHERE p.autor IN :seguindo

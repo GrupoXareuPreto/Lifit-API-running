@@ -1,35 +1,27 @@
 package br.com.xareu.lift.DTO.Evento;
 
 import jakarta.validation.constraints.Future;
-import jakarta.validation.constraints.FutureOrPresent;
 import jakarta.validation.constraints.NotBlank;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import jakarta.validation.constraints.NotNull;
 
 import java.time.LocalDateTime;
 
-@Data
-@AllArgsConstructor
-@NoArgsConstructor
-public class EventoRequestCriarDTO {
+public record EventoRequestCriarDTO (
+        @NotBlank(message = "O titulo é obrigatório")
+        String titulo,
 
-    @NotBlank(message = "O titulo é obrigatório")
-    private String titulo;
-
-    @NotBlank(message = "O evento deve conter uma midia")
-    private String midia;
-
-    private String descricao;
-
-    @NotBlank(message = "A Localização do evento é obrigatoria")
-    private String localizacao;
-
-    @NotBlank(message = "A data de inicio é obrigatoria")
-    @Future(message = "A data de inicio deve estar sempre no fututo")
-    private LocalDateTime dataInicio;
-
-    @Future(message = "A daat final deve estar sempre no futuro")
-    private LocalDateTime dataFim;
-
-}
+        @NotBlank(message = "O evento deve conter uma midia")
+        String midia,
+        
+        String descricao,
+        
+        @NotBlank(message = "A Localização do evento é obrigatoria")
+        String localizacao,
+        
+        @NotNull(message = "A data de inicio é obrigatoria")
+        @Future(message = "A data de inicio deve estar sempre no fututo")
+        LocalDateTime dataInicio,
+        
+        @Future(message = "A daat final deve estar sempre no futuro")
+        LocalDateTime dataFim
+) { }

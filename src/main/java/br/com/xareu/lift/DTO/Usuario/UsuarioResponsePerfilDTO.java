@@ -15,6 +15,6 @@ public record UsuarioResponsePerfilDTO(
         String nomeUsuario,
         List<MetaResponsePerfilDTO> metas,
         List<EventoResponsePerfilDTO> eventos,
-        List<PostagemResponseImagemDTO> Postagens
+        List<PostagemResponseImagemDTO> postagens
 ){
 }

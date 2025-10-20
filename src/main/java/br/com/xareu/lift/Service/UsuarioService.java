@@ -4,6 +4,7 @@ import br.com.xareu.lift.DTO.Usuario.*;
 import br.com.xareu.lift.Entity.Postagem;
 import br.com.xareu.lift.Entity.Usuario;
 import br.com.xareu.lift.Mapper.UsuarioMapper;
+import br.com.xareu.lift.Repository.PostagemRepository;
 import br.com.xareu.lift.Repository.UsuarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -23,7 +24,8 @@ public class UsuarioService {
     private  PasswordEncoder passwordEncoder;
     @Autowired
     private  UsuarioMapper mapper;
-
+    @Autowired
+    private PostagemRepository postagemRepository;
 
 
     public List<UsuarioResponsePerfilDTO> getAll() {
@@ -46,9 +48,13 @@ public class UsuarioService {
         return  mapper.toResponsePerfilDTO(usuarioSalvo);
     }
 
-
+    @Transactional
     public UsuarioResponsePerfilDTO buscarPorId(Long id){
         Usuario usuario = repository.findById(id).orElseThrow(() -> new RuntimeException("Usuário não encontrado"));
+        //usuario.getPostagens().clear();
+        List<Postagem> novasPostagens = postagemRepository.findByAutor(usuario);
+        usuario.getPostagens().addAll(novasPostagens);
+        //System.out.println(usuario.getPostagens());
         return mapper.toResponsePerfilDTO(usuario);
     }
 
@@ -91,24 +97,6 @@ public class UsuarioService {
             System.out.println("ERRO"+ex.getMessage());
             return Optional.empty();
         }
-
-    }
-
-    @Transactional
-    public void adicinarPostagemNoUsuario (Usuario usuario, Postagem postagem){
-        try{
-            Usuario usuarioGerenciado = repository.findById(usuario.getId()).orElseThrow(() -> new RuntimeException("Usuário não encontrado com o ID: " + usuario.getId()));;
-            List<Postagem> postagens = usuarioGerenciado.getPostagens();
-            postagens.add(postagem);
-            usuarioGerenciado.setPostagens(postagens);
-            System.out.println("Usuario que foi salvo"+usuarioGerenciado);
-            repository.save(usuarioGerenciado);
-        }catch (Exception ex)
-        {
-            System.out.println("ERRO"+ex.getMessage());
-
-        }
-
 
     }
 }

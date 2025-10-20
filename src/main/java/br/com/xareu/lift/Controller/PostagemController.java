@@ -67,6 +67,7 @@ public class PostagemController {
     }
 
 
+
     // Outros endpoints (GET por ID, GET todos, etc.) podem continuar existindo
     // e não precisam necessariamente do usuário logado, a menos que você tenha
     // postagens privadas.

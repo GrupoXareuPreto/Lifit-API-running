@@ -32,9 +32,6 @@ public class PostagemService {
     @Autowired
     private PostagemMapper postagemMapper;
 
-    @Autowired
-    private UsuarioService usuarioService;
-
     @Transactional
     public PostagemResponseFeedDTO criarPostagem(PostagemRequestCriarDTO dto, Usuario autor) {
         Postagem postagem = new Postagem();
@@ -45,7 +42,6 @@ public class PostagemService {
 
 
         Postagem savedPostagem = postagemRepository.save(postagem);
-        usuarioService.adicinarPostagemNoUsuario(autor, postagem);
         return postagemMapper.toResponseFeedDTO(savedPostagem);
     }
 

@@ -17,7 +17,7 @@ public interface EventoMapper {
     @Mapping(source = "autor", target = "autor")
     EventoResponseFeedDTO toResponseFeedDTO(Evento evento);
 
-    EventoResponsePerfilDTO toEventoResponsePerfilDTO(Evento evento);
+    List<EventoResponsePerfilDTO> toEventoResponsePerfilDTOList(List<Evento> eventos);
 
     List<EventoResponseFeedDTO> toResponseFeedDTOList(List<Evento> eventos);
 }

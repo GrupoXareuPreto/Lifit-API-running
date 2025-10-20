@@ -7,14 +7,12 @@ import br.com.xareu.lift.Entity.Evento;
 import br.com.xareu.lift.Entity.Usuario;
 import br.com.xareu.lift.Mapper.EventoMapper;
 import br.com.xareu.lift.Repository.EventoRepository;
-import br.com.xareu.lift.Repository.UsuarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 public class EventoService {
@@ -57,27 +55,27 @@ public class EventoService {
     private EventoRepository repository;
 
     @Autowired
-    private EventoMapper mapper;
+    private EventoMapper eventoMapper;
 
     @Transactional
     public EventoResponseFeedDTO criarEvento(EventoRequestCriarDTO dto, Usuario autor) {
         Evento evento = new Evento();
-        evento.setTitulo(dto.getTitulo());
-        evento.setMidia(dto.getMidia());
-        evento.setDescricao(dto.getDescricao());
-        evento.setLocalizacao(dto.getLocalizacao());
-        evento.setDataInicio(dto.getDataInicio());
-        evento.setDataFim(dto.getDataFim());
-        evento.setAutor(autor); // Define o autor como o usuário que está logado!
+        evento.setTitulo(dto.titulo());
+        evento.setMidia(dto.midia());
+        evento.setDescricao(dto.descricao());
+        evento.setLocalizacao(dto.localizacao());
+        evento.setDataInicio(dto.dataInicio());
+        evento.setDataFim(dto.dataFim());
+        evento.setAutor(autor);
 
         Evento eventoSaved = repository.save(evento);
-        return mapper.toResponseFeedDTO(eventoSaved);
+        return eventoMapper.toResponseFeedDTO(eventoSaved);
     }
 
 
     // MELHORIA 2: O método getAll agora retorna uma lista de DTOs.
     public List<EventoResponseFeedDTO> getAll() {
-        return mapper.toResponseFeedDTOList(repository.findAll());
+        return eventoMapper.toResponseFeedDTOList(repository.findAll());
 
     }
 
@@ -113,14 +111,18 @@ public class EventoService {
         }
 
         // Atualiza os campos do evento existente com os dados da DTO
-        eventoExistente.setTitulo(dto.getTitulo());
-        eventoExistente.setMidia(dto.getMidia());
-        eventoExistente.setDescricao(dto.getDescricao());
-        eventoExistente.setLocalizacao(dto.getLocalizacao());
-        eventoExistente.setDataInicio(dto.getDataInicio());
-        eventoExistente.setDataFim(dto.getDataFim());
+        eventoExistente.setTitulo(dto.titulo());
+        eventoExistente.setMidia(dto.midia());
+        eventoExistente.setDescricao(dto.descricao());
+        eventoExistente.setLocalizacao(dto.localizacao());
+        eventoExistente.setDataInicio(dto.dataInicio());
+        eventoExistente.setDataFim(dto.dataFim());
 
         Evento eventoAtualizado = repository.save(eventoExistente);
-        return Optional.of(mapper.toResponseFeedDTO(eventoAtualizado));
+        return Optional.of(eventoMapper.toResponseFeedDTO(eventoAtualizado));
+    }
+
+    public List<EventoResponsePerfilDTO> getMetasPorAutor(Usuario autor) {
+        return eventoMapper.toEventoResponsePerfilDTOList(repository.findByAutor(autor));
     }
 }

@@ -42,6 +42,11 @@ public class UsuarioService {
         return mapper.toResponsePerfilDTO(usuario);
     }
 
+    public UsuarioResponsePerfilDTO buscaPorNomeUsuario(String nomeUsuario){
+        Usuario usuario = repository.findByNomeUsuario(nomeUsuario).orElseThrow(() -> new RuntimeException("Usuario nao encontrado"));
+        return mapper.toResponsePerfilDTO(usuario);
+    }
+
 
 
     @Transactional

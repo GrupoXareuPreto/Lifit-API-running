@@ -48,10 +48,11 @@ public class    UsuarioController {
         return ResponseEntity.ok(meuPerfil);
     }
 
-//    @GetMapping("/{nomeUsuario}")
-//    public ResponseEntity<UsuarioResponsePerfilDTO> buscarPorNomeUsuario(@PathVariable String nomeUsuario){
-//
-//    }
+    @GetMapping("/user/{nomeUsuario}")
+    public ResponseEntity<UsuarioResponsePerfilDTO> buscarPorNomeUsuario(@PathVariable String nomeUsuario){
+        UsuarioResponsePerfilDTO usuario = service.buscaPorNomeUsuario(nomeUsuario);
+        return ResponseEntity.ok(usuario);
+    }
 
     @PostMapping
     public ResponseEntity<UsuarioResponsePerfilDTO> criarUsuario(@Valid @RequestBody UsuarioRequestDTO usuarioDTO) {

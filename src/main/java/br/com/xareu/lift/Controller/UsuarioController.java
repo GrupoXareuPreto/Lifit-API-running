@@ -42,6 +42,16 @@ public class    UsuarioController {
         }
     }
 
+    @GetMapping("/me")
+    public ResponseEntity<UsuarioResponsePerfilDTO> getMeuPerfil(@AuthenticationPrincipal Usuario usuarioLogado) {
+        UsuarioResponsePerfilDTO meuPerfil = service.buscarPorId(usuarioLogado.getId());
+        return ResponseEntity.ok(meuPerfil);
+    }
+
+    @GetMapping("/{nomeUsuario}")
+    public ResponseEntity<UsuarioResponsePerfilDTO> buscarPorNomeUsuario(@PathVariable String nomeUsuario){
+
+    }
 
     @PostMapping
     public ResponseEntity<UsuarioResponsePerfilDTO> criarUsuario(@Valid @RequestBody UsuarioRequestDTO usuarioDTO) {
@@ -66,11 +76,5 @@ public class    UsuarioController {
     public ResponseEntity<Void> deletarMinhaConta(@AuthenticationPrincipal Usuario usuarioLogado) {
         service.deletarUsuarioLogado(usuarioLogado);
         return ResponseEntity.noContent().build();
-    }
-
-    @GetMapping("/me")
-    public ResponseEntity<UsuarioResponsePerfilDTO> getMeuPerfil(@AuthenticationPrincipal Usuario usuarioLogado) {
-        UsuarioResponsePerfilDTO meuPerfil = service.buscarPorId(usuarioLogado.getId());
-        return ResponseEntity.ok(meuPerfil);
     }
 }

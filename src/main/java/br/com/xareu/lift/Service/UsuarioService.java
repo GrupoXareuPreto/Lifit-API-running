@@ -37,6 +37,13 @@ public class UsuarioService {
         return mapper.toPerfilResponseList(usuarios);
     }
 
+    public UsuarioResponsePerfilDTO buscarPorId(Long id){
+        Usuario usuario = repository.findById(id).orElseThrow(() -> new RuntimeException("Usuário não encontrado"));
+        return mapper.toResponsePerfilDTO(usuario);
+    }
+
+
+
     @Transactional
     public UsuarioResponsePerfilDTO criarUsuario(UsuarioRequestDTO usuarioDTO) {
         if (repository.findByEmail(usuarioDTO.email()).isPresent()) {
@@ -52,11 +59,7 @@ public class UsuarioService {
         return  mapper.toResponsePerfilDTO(usuarioSalvo);
     }
 
-    @Transactional
-    public UsuarioResponsePerfilDTO buscarPorId(Long id){
-        Usuario usuario = repository.findById(id).orElseThrow(() -> new RuntimeException("Usuário não encontrado"));
-        return mapper.toResponsePerfilDTO(usuario);
-    }
+
 
     @Transactional
     public UsuarioResponsePerfilDTO atualizarUsuarioLogado(UsuarioRequestDTO usuarioAtualizadoDTO, Usuario usuarioLogado) {

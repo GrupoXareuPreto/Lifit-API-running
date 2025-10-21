@@ -2,9 +2,7 @@ package br.com.xareu.lift.Entity;
 
 import com.fasterxml.jackson.annotation.*;
 import jakarta.persistence.*;
-import lombok.Data;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -14,6 +12,7 @@ import java.util.List;
 @Entity
 @Table(name = "TBL_USUARIO")
 @Data
+
 public class Usuario implements UserDetails {
 
     @Id
@@ -59,7 +58,7 @@ public class Usuario implements UserDetails {
     private List<Comentario> comentarios;
 
     @OneToMany(mappedBy = "autor",  cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Evento> eventosCriados;
+    private List<Evento> eventos;
 
     @OneToMany(mappedBy = "autor",   cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Mensagem> mensagens;

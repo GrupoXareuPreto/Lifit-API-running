@@ -78,7 +78,7 @@ public class PostagemService {
         List<Postagem> postsSeguindo = postagemRepository.findFeedSeguindo(
                 seguindo, ultimoCursor, PageRequest.of(0, tamanhoPagina)
         );
-        System.out.println("aqui");
+
 
         feedFinal.addAll(postagemMapper.toResponseFeedDTOList(postsSeguindo));
 
@@ -89,7 +89,10 @@ public class PostagemService {
             List<Postagem> postsExplorar = postagemRepository.findFeedExplorar(
                     ultimoCursor, PageRequest.of(0, faltando)
             );
-            System.out.println("aqui2");
+
+            //remove os proprios posts
+            postsExplorar.removeIf(postagem -> postagem.getAutor().getNomeUsuario()==usuario.getNomeUsuario());
+
             feedFinal.addAll(postagemMapper.toResponseFeedDTOList(postsExplorar));
         }
 

@@ -7,6 +7,7 @@ import br.com.xareu.lift.Entity.Postagem;
 import br.com.xareu.lift.Entity.Usuario;
 import br.com.xareu.lift.Mapper.PostagemMapper;
 import br.com.xareu.lift.Repository.PostagemRepository;
+import br.com.xareu.lift.Repository.UsuarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import org.springframework.stereotype.Service;
@@ -27,6 +28,9 @@ public class PostagemService {
 
     @Autowired
     private PostagemMapper postagemMapper;
+
+    @Autowired
+    private UsuarioRepository usuarioRepository;
 
     @Transactional
     public PostagemResponseFeedDTO criarPostagem(PostagemRequestCriarDTO dto, Usuario autor) {
@@ -64,15 +68,20 @@ public class PostagemService {
     @Transactional(readOnly = true)
     public PostagemFeedResponseDTO getFeedInfinito(Usuario usuarioLogado, LocalDateTime ultimoCursor, int tamanhoPagina) {
 
+        Usuario usuario = usuarioRepository.findById(usuarioLogado.getId())
+                .orElseThrow(() -> new RuntimeException("Usuário não encontrado"));
+
         List<PostagemResponseFeedDTO> feedFinal = new ArrayList<>();
-        List<Usuario> seguindo = usuarioLogado.getSeguindo();
+        List<Usuario> seguindo = usuario.getSeguindo();
 
         // 1️⃣ Posts de quem o usuário segue
         List<Postagem> postsSeguindo = postagemRepository.findFeedSeguindo(
                 seguindo, ultimoCursor, PageRequest.of(0, tamanhoPagina)
         );
+        System.out.println("aqui");
 
         feedFinal.addAll(postagemMapper.toResponseFeedDTOList(postsSeguindo));
+
 
         // 2️⃣ Se faltar, preenche com posts "explorar"
         if (postsSeguindo.size() < tamanhoPagina) {
@@ -80,8 +89,10 @@ public class PostagemService {
             List<Postagem> postsExplorar = postagemRepository.findFeedExplorar(
                     ultimoCursor, PageRequest.of(0, faltando)
             );
+            System.out.println("aqui2");
             feedFinal.addAll(postagemMapper.toResponseFeedDTOList(postsExplorar));
         }
+
 
         // 3️⃣ Calcula o novo cursor
         LocalDateTime nextCursor = null;

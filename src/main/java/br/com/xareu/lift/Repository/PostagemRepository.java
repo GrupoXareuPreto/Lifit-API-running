@@ -3,6 +3,7 @@ package br.com.xareu.lift.Repository;
 import br.com.xareu.lift.Entity.Postagem;
 import br.com.xareu.lift.Entity.Usuario;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
@@ -12,6 +13,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.data.domain.Pageable;
+import org.springframework.transaction.annotation.Transactional;
 
 
 @Repository
@@ -38,4 +40,6 @@ public interface PostagemRepository extends JpaRepository<Postagem, Long> {
     """)
     List<Postagem> findFeedExplorar(@Param("ultimoCursor") LocalDateTime ultimoCursor,
                                     Pageable pageable);
+
+
 }

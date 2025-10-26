@@ -46,8 +46,8 @@ public class Evento {
     @OneToMany
     private List<Comentario> comentarios;
 
-    @Column
-    private int compartilhamentos;
+    @Column(name = "NM_COMPARTILHAMENTOS")
+    private int compartilhamentos = 0;
 
     @ManyToMany(mappedBy = "eventosParticipar")
     private List<Usuario> participantes;

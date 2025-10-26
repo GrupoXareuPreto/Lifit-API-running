@@ -32,13 +32,13 @@ public class Postagem {
     private String descricao;
 
     @Column(name = "NM_COMPARTILHAMENTOS")
-    private int compartilhamentos;
+    private int compartilhamentos = 0;
 
     @Column(name = "DT_PUBLICACAO", nullable = false)
     private LocalDateTime dataPublicacao = LocalDateTime.now();
 
     @OneToMany(mappedBy = "postagem")
-    private List<Curtida> curtidas;
+    private List<Curtida> curtidas ;
 
     @OneToMany(mappedBy = "postagem")
     private List<Comentario> comentarios;

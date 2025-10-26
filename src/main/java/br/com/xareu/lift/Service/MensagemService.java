@@ -28,24 +28,24 @@ public class MensagemService {
 
     @Transactional
     public MensagemResponseDTO criarMensagem(Long conversaId, MensagemRequestDTO dto, Usuario autorLogado) throws IllegalAccessException {
-//        Conversa conversa = conversaRepository.findById(conversaId)
-//                .orElseThrow(() -> new RuntimeException("Conversa não encontrada"));
-//
-//
-//        boolean isIntegrante = conversa.getIntegrantes().stream().anyMatch(u -> u.getId().equals(autorLogado.getId()));
-//        if (!isIntegrante) {
-//            throw new IllegalAccessException("Você não é um integrante desta conversa.");
-//        }
-//
-//        Mensagem novaMensagem = new Mensagem();
-//        novaMensagem.setConteudo(dto.conteudo());
-//        novaMensagem.setAutor(autorLogado);
-//        novaMensagem.setConversa(conversa);
-//        novaMensagem.setDataEnvio(LocalDateTime.now());
-//        novaMensagem.setStatus(StatusMensagemEnum.ENVIADA_NAO_RECEBIDA);
-//
-//        Mensagem savedMensagem = mensagemRepository.save(novaMensagem);
-//        return mapper.toResponseDTO(savedMensagem);
+        Conversa conversa = conversaRepository.findById(conversaId)
+                .orElseThrow(() -> new RuntimeException("Conversa não encontrada"));
+
+
+        boolean isIntegrante = conversa.getIntegrantes().stream().anyMatch(u -> u.getId().equals(autorLogado.getId()));
+        if (!isIntegrante) {
+            throw new IllegalAccessException("Você não é um integrante desta conversa.");
+        }
+
+        Mensagem novaMensagem = new Mensagem();
+        novaMensagem.setConteudo(dto.conteudo());
+        novaMensagem.setAutor(autorLogado);
+        novaMensagem.setConversa(conversa);
+        novaMensagem.setDataEnvio(LocalDateTime.now());
+        novaMensagem.setStatus(StatusMensagemEnum.ENVIADA_NAO_RECEBIDA);
+
+        Mensagem savedMensagem = mensagemRepository.save(novaMensagem);
+        return mapper.toResponseDTO(savedMensagem);
     }
 
 

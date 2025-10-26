@@ -10,5 +10,6 @@ public record PostagemResponseFeedDTO(
         LocalDateTime dataPublicacao,
         int numCurtidas,
         int numComentaios,
-        int numCompartilhamentos
+        int numCompartilhamentos,
+        String descricao
 ) {}

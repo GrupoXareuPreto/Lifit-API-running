@@ -15,7 +15,7 @@ public record MetaRequestCriarDTO(
 
         StatusMetaEnum status,
 
-        LocalDateTime dataInicio,
+        LocalDate dataInicio,
 
         @NotNull(message = "A data final deve ser definida")
         @Future(message = "A data deve estar sempre no futuro")

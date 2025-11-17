@@ -9,6 +9,7 @@ import java.time.LocalDate;
 
 
 public record MetaResponsePerfilDTO(
+         Long id,
          String nome,
          boolean publica,
          StatusMetaEnum status,

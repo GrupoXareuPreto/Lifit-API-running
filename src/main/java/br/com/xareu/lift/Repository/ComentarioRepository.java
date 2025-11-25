@@ -11,4 +11,6 @@ import java.util.List;
 public interface ComentarioRepository extends JpaRepository<Comentario, Long> {
 
     List<Comentario> findByPostagemIdOrderByDataCriacaoDesc(Long postagemId);
+    
+    List<Comentario> findByEventoIdOrderByDataCriacaoDesc(Long eventoId);
 }

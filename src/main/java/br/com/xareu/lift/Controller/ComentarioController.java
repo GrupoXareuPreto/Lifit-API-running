@@ -41,7 +41,15 @@ public class ComentarioController {
         }
     }
 
-
+    @GetMapping("/evento/{eventoId}")
+    public ResponseEntity<List<ComentarioResponseDTO>> getComentariosPorEvento(@PathVariable Long eventoId) {
+        try {
+            List<ComentarioResponseDTO> comentarios = service.getComentariosPorEvento(eventoId);
+            return ResponseEntity.ok(comentarios);
+        } catch (RuntimeException e) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
+        }
+    }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deletarComentario(

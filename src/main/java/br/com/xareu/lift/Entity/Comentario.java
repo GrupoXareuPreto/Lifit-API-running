@@ -31,7 +31,11 @@ public class Comentario {
     private Usuario autor;
 
     @ManyToOne
-    @JoinColumn(name = "ID_POSTAGEM", nullable = false)
+    @JoinColumn(name = "ID_POSTAGEM")
     private Postagem postagem;
+
+    @ManyToOne
+    @JoinColumn(name = "ID_EVENTO")
+    private Evento evento;
 
 }

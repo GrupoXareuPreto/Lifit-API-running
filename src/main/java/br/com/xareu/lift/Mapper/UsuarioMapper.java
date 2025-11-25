@@ -20,8 +20,12 @@ public interface UsuarioMapper {
 
     UsuarioResponseComentarioDTO toUsuarioResponseComentarioDTO(Usuario usuario);
 
+    UsuarioResponseSimples toUsuarioResponseSimples(Usuario usuario);
+
     Usuario toEntity(UsuarioRequestDTO dto);
 
     List<UsuarioResponsePerfilDTO> toPerfilResponseList(List<Usuario> usuarios);
+
+    List<UsuarioResponseSimples> toUsuarioResponseSimplesList(List<Usuario> usuarios);
 
 }

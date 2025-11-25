@@ -17,45 +17,47 @@ import java.util.Optional;
 @Service
 public class EventoService {
 
-/*--------------------------------------------------------------------------------------------------------------------*/
-/*Parte de DTOs
-
-    private EventoResponseFeedDTO toResponseFeedDTO(Evento evento){
-        if(evento == null){
-            return null;
-        }
-        else {
-            return new EventoResponseFeedDTO(
-                    usuarioService.toUsuarioCardPostagemEventoDTO(evento.getAutor()),
-                    evento.getMidia(),
-                    evento.getDataInicio(),
-                    evento.getCurtidas() != null ? evento.getCurtidas().size() : 0,
-                    evento.getComentarios() != null ? evento.getComentarios().size() : 0,
-                    evento.getCompartilhamentos()
-            );
-        }
-
-    }
-
-    public EventoResponsePerfilDTO toEventoResponsePerfilDTO(Evento evento){
-        if(evento == null){
-            return null;
-        }
-        else {
-            return new EventoResponsePerfilDTO(
-                    evento.getMidia(),
-                    evento.getTitulo()
-            );
-        }
-    }
-
---------------------------------------------------------------------------------------------------------------------*/
-
     @Autowired
     private EventoRepository repository;
 
     @Autowired
     private EventoMapper eventoMapper;
+
+    @Autowired
+    private UsuarioMapper usuarioMapper;
+
+    private EventoResponseFeedDTO toResponseFeedDTO(Evento evento, Usuario usuarioLogado) {
+        if (evento == null) {
+            return null;
+        }
+        
+        // Pega os primeiros 3 participantes
+        List<Usuario> primeirosParticipantes = evento.getParticipantes() != null
+                ? evento.getParticipantes().stream().limit(3).toList()
+                : List.of();
+        
+        // Verifica se o usuário logado está confirmado
+        boolean confirmado = evento.getParticipantes() != null
+                && evento.getParticipantes().stream()
+                        .anyMatch(p -> p.getId().equals(usuarioLogado.getId()));
+        
+        return new EventoResponseFeedDTO(
+                evento.getId(),
+                evento.getTitulo(),
+                evento.getDescricao(),
+                evento.getLocalizacao(),
+                evento.getDataInicio(),
+                evento.getDataFim(),
+                usuarioMapper.toUsuarioCardPostagemEventoDTO(evento.getAutor()),
+                evento.getMidia(),
+                evento.getCurtidas() != null ? evento.getCurtidas().size() : 0,
+                evento.getComentarios() != null ? evento.getComentarios().size() : 0,
+                evento.getCompartilhamentos(),
+                evento.getParticipantes() != null ? evento.getParticipantes().size() : 0,
+                usuarioMapper.toUsuarioResponseSimplesList(primeirosParticipantes),
+                confirmado
+        );
+    }
 
     @Transactional
     public EventoResponseFeedDTO criarEvento(EventoRequestCriarDTO dto, Usuario autor) {
@@ -69,14 +71,14 @@ public class EventoService {
         evento.setAutor(autor);
 
         Evento eventoSaved = repository.save(evento);
-        return eventoMapper.toResponseFeedDTO(eventoSaved);
+        return toResponseFeedDTO(eventoSaved, autor);
     }
 
 
-    // MELHORIA 2: O método getAll agora retorna uma lista de DTOs.
-    public List<EventoResponseFeedDTO> getAll() {
-        return eventoMapper.toResponseFeedDTOList(repository.findAll());
-
+    public List<EventoResponseFeedDTO> getAll(Usuario usuarioLogado) {
+        return repository.findAll().stream()
+                .map(evento -> toResponseFeedDTO(evento, usuarioLogado))
+                .toList();
     }
 
 
@@ -119,10 +121,49 @@ public class EventoService {
         eventoExistente.setDataFim(dto.dataFim());
 
         Evento eventoAtualizado = repository.save(eventoExistente);
-        return Optional.of(eventoMapper.toResponseFeedDTO(eventoAtualizado));
+        return Optional.of(toResponseFeedDTO(eventoAtualizado, usuarioLogado));
     }
 
     public List<EventoResponsePerfilDTO> getEventosPorAutor(Usuario autor) {
           return eventoMapper.toEventoResponsePerfilDTOList(repository.findByAutor(autor));
+    }
+
+    public Optional<EventoResponseFeedDTO> getEventoPorId(Long id, Usuario usuarioLogado) {
+        return repository.findById(id)
+                .map(evento -> toResponseFeedDTO(evento, usuarioLogado));
+    }
+
+    @Transactional
+    public EventoResponseFeedDTO confirmarPresenca(Long eventoId, Usuario usuarioLogado) {
+        Evento evento = repository.findById(eventoId)
+                .orElseThrow(() -> new RuntimeException("Evento não encontrado"));
+        
+        // Adiciona o usuário à lista de participantes se ainda não estiver
+        if (evento.getParticipantes() == null) {
+            evento.setParticipantes(new java.util.ArrayList<>());
+        }
+        
+        boolean jaConfirmado = evento.getParticipantes().stream()
+                .anyMatch(p -> p.getId().equals(usuarioLogado.getId()));
+        
+        if (!jaConfirmado) {
+            evento.getParticipantes().add(usuarioLogado);
+            repository.save(evento);
+        }
+        
+        return toResponseFeedDTO(evento, usuarioLogado);
+    }
+
+    @Transactional
+    public EventoResponseFeedDTO removerPresenca(Long eventoId, Usuario usuarioLogado) {
+        Evento evento = repository.findById(eventoId)
+                .orElseThrow(() -> new RuntimeException("Evento não encontrado"));
+        
+        if (evento.getParticipantes() != null) {
+            evento.getParticipantes().removeIf(p -> p.getId().equals(usuarioLogado.getId()));
+            repository.save(evento);
+        }
+        
+        return toResponseFeedDTO(evento, usuarioLogado);
     }
 }

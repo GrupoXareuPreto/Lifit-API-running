@@ -7,7 +7,7 @@ public record ComentarioRequestDTO(
         @NotBlank(message = "O conteúdo do comentário não pode ser vazio")
         String conteudo,
 
-        // Apenas para a criação. Na atualização, não precisamos do ID do post.
-        @NotNull(message = "O ID da postagem é obrigatório para criar um comentário")
-        Long postagemId
+        Long postagemId,
+
+        Long eventoId
 ) {}

@@ -33,8 +33,41 @@ public class EventoController {
     }
 
     @GetMapping
-    public ResponseEntity<List<EventoResponseFeedDTO>> getAll() {
-        return ResponseEntity.ok(service.getAll());
+    public ResponseEntity<List<EventoResponseFeedDTO>> getAll(@AuthenticationPrincipal Usuario usuarioLogado) {
+        return ResponseEntity.ok(service.getAll(usuarioLogado));
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<EventoResponseFeedDTO> getEventoPorId(
+            @PathVariable Long id,
+            @AuthenticationPrincipal Usuario usuarioLogado) {
+        return service.getEventoPorId(id, usuarioLogado)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
+    }
+
+    @PostMapping("/{id}/confirmar")
+    public ResponseEntity<EventoResponseFeedDTO> confirmarPresenca(
+            @PathVariable Long id,
+            @AuthenticationPrincipal Usuario usuarioLogado) {
+        try {
+            EventoResponseFeedDTO evento = service.confirmarPresenca(id, usuarioLogado);
+            return ResponseEntity.ok(evento);
+        } catch (RuntimeException e) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
+        }
+    }
+
+    @DeleteMapping("/{id}/confirmar")
+    public ResponseEntity<EventoResponseFeedDTO> removerPresenca(
+            @PathVariable Long id,
+            @AuthenticationPrincipal Usuario usuarioLogado) {
+        try {
+            EventoResponseFeedDTO evento = service.removerPresenca(id, usuarioLogado);
+            return ResponseEntity.ok(evento);
+        } catch (RuntimeException e) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
+        }
     }
 
     @PutMapping("/{id}")

@@ -5,9 +5,11 @@ import br.com.xareu.lift.DTO.Comentario.ComentarioResponseDTO;
 import br.com.xareu.lift.DTO.Curtida.CurtidaResponseDTO;
 import br.com.xareu.lift.Entity.Comentario;
 import br.com.xareu.lift.Entity.Curtida;
+import br.com.xareu.lift.Entity.Evento;
 import br.com.xareu.lift.Entity.Postagem;
 import br.com.xareu.lift.Entity.Usuario;
 import br.com.xareu.lift.Repository.ComentarioRepository;
+import br.com.xareu.lift.Repository.EventoRepository;
 import br.com.xareu.lift.Repository.PostagemRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -23,24 +25,27 @@ public class ComentarioService {
 
     private final ComentarioRepository comentarioRepository;
     private final PostagemRepository postagemRepository;
+    private final EventoRepository eventoRepository;
 
     @Autowired
-    public ComentarioService(ComentarioRepository comentarioRepository, PostagemRepository postagemRepository) {
+    public ComentarioService(ComentarioRepository comentarioRepository, PostagemRepository postagemRepository, EventoRepository eventoRepository) {
         this.comentarioRepository = comentarioRepository;
         this.postagemRepository = postagemRepository;
+        this.eventoRepository = eventoRepository;
     }
 
 
 /*--------------------------------------------------------------------------------------------------------------------*/
 /*parte de DTOs*/
     private ComentarioResponseDTO toResponseDTO(Comentario comentario) {
+        Long postagemId = comentario.getPostagem() != null ? comentario.getPostagem().getId() : null;
         return new ComentarioResponseDTO(
                 comentario.getId(),
                 comentario.getConteudo(),
                 comentario.getDataCriacao(),
                 comentario.getAutor().getId(),
                 comentario.getAutor().getNomeUsuario(),
-                comentario.getPostagem().getId()
+                postagemId
         );
 }
 
@@ -53,14 +58,23 @@ public class ComentarioService {
 
     @Transactional
     public ComentarioResponseDTO criarComentario(ComentarioRequestDTO dto, Usuario autorLogado) {
-        Postagem postagem = postagemRepository.findById(dto.postagemId())
-                .orElseThrow(() -> new RuntimeException("Postagem não encontrada"));
-
         Comentario novoComentario = new Comentario();
         novoComentario.setConteudo(dto.conteudo());
-        novoComentario.setPostagem(postagem);
-        novoComentario.setAutor(autorLogado); // Autor vem do token!
+        novoComentario.setAutor(autorLogado);
         novoComentario.setDataCriacao(LocalDateTime.now());
+
+        // Verifica se é comentário em postagem ou evento
+        if (dto.postagemId() != null) {
+            Postagem postagem = postagemRepository.findById(dto.postagemId())
+                    .orElseThrow(() -> new RuntimeException("Postagem não encontrada"));
+            novoComentario.setPostagem(postagem);
+        } else if (dto.eventoId() != null) {
+            Evento evento = eventoRepository.findById(dto.eventoId())
+                    .orElseThrow(() -> new RuntimeException("Evento não encontrado"));
+            novoComentario.setEvento(evento);
+        } else {
+            throw new RuntimeException("Comentário deve pertencer a uma postagem ou evento");
+        }
 
         Comentario comentarioSalvo = comentarioRepository.save(novoComentario);
         return toResponseDTO(comentarioSalvo);
@@ -72,11 +86,17 @@ public class ComentarioService {
                 .orElseThrow(() -> new RuntimeException("Comentário não encontrado"));
 
         // *** A VERIFICAÇÃO DE AUTORIZAÇÃO CRUCIAL ***
-        // Apenas o autor do comentário OU o autor da postagem podem deletar.
+        // Apenas o autor do comentário OU o autor da postagem/evento podem deletar.
         boolean isAutorDoComentario = comentario.getAutor().getId().equals(usuarioLogado.getId());
-        boolean isAutorDaPostagem = comentario.getPostagem().getAutor().getId().equals(usuarioLogado.getId());
+        boolean isAutorDoConteudo = false;
+        
+        if (comentario.getPostagem() != null) {
+            isAutorDoConteudo = comentario.getPostagem().getAutor().getId().equals(usuarioLogado.getId());
+        } else if (comentario.getEvento() != null) {
+            isAutorDoConteudo = comentario.getEvento().getAutor().getId().equals(usuarioLogado.getId());
+        }
 
-        if (!isAutorDoComentario && !isAutorDaPostagem) {
+        if (!isAutorDoComentario && !isAutorDoConteudo) {
             throw new IllegalAccessException("Você não tem permissão para deletar este comentário.");
         }
 
@@ -92,6 +112,13 @@ public class ComentarioService {
                 .collect(Collectors.toList());
     }
 
-
+    public List<ComentarioResponseDTO> getComentariosPorEvento(Long eventoId) {
+        if (!eventoRepository.existsById(eventoId)) {
+            throw new RuntimeException("Evento não encontrado");
+        }
+        return comentarioRepository.findByEventoIdOrderByDataCriacaoDesc(eventoId).stream()
+                .map(this::toResponseDTO)
+                .collect(Collectors.toList());
+    }
 
 }

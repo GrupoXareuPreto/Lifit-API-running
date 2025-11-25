@@ -65,25 +65,27 @@ public class FeedService {
         }
 
         // Busca eventos futuros (apenas eventos que ainda não aconteceram)
+        // Ignora eventos já exibidos usando o cursor
         int eventosNecessarios = tamanhoPagina / 6; // 1 evento a cada 5 posts
         List<Evento> eventos = eventoRepository.findAll().stream()
                 .filter(e -> e.getDataInicio().isAfter(LocalDateTime.now()))
+                .filter(e -> ultimoCursor == null || e.getDataCriacao().isBefore(ultimoCursor))
+                .sorted((e1, e2) -> e2.getDataCriacao().compareTo(e1.getDataCriacao())) // Mais recente primeiro
                 .limit(eventosNecessarios)
                 .toList();
 
         // Intercala posts e eventos (1 evento a cada 5 posts)
         int postIndex = 0;
         int eventoIndex = 0;
-        int contador = 0;
 
-        while (feedUnificado.size() < tamanhoPagina && (postIndex < postagens.size() || eventoIndex < eventos.size())) {
+        while (feedUnificado.size() < tamanhoPagina && postIndex < postagens.size()) {
             // Adiciona 5 posts
             for (int i = 0; i < 5 && postIndex < postagens.size() && feedUnificado.size() < tamanhoPagina; i++) {
                 PostagemResponseFeedDTO postagemDTO = postagemMapper.toResponseFeedDTO(postagens.get(postIndex++));
                 feedUnificado.add(ItemFeedDTO.fromPostagem(postagemDTO));
             }
 
-            // Adiciona 1 evento
+            // Adiciona 1 evento (se ainda houver eventos disponíveis)
             if (eventoIndex < eventos.size() && feedUnificado.size() < tamanhoPagina) {
                 EventoResponseFeedDTO eventoDTO = toEventoResponseFeedDTO(eventos.get(eventoIndex++), usuario);
                 feedUnificado.add(ItemFeedDTO.fromEvento(eventoDTO));

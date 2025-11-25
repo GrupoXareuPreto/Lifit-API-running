@@ -6,6 +6,7 @@ import br.com.xareu.lift.DTO.Evento.EventoResponsePerfilDTO;
 import br.com.xareu.lift.Entity.Evento;
 import br.com.xareu.lift.Entity.Usuario;
 import br.com.xareu.lift.Mapper.EventoMapper;
+import br.com.xareu.lift.Mapper.UsuarioMapper;
 import br.com.xareu.lift.Repository.EventoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

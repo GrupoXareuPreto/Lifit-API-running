@@ -47,6 +47,11 @@ public class UsuarioService {
         return mapper.toResponsePerfilDTO(usuario);
     }
 
+    public UsuarioResponsePerfilDTO buscaPorEmail(String email){
+        Usuario usuario = repository.findByEmail(email).orElseThrow(() -> new RuntimeException("Usuario nao encontrado"));
+        return mapper.toResponsePerfilDTO(usuario);
+    }
+
 
 
     @Transactional

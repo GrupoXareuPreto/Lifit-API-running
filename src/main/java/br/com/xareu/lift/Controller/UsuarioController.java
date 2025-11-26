@@ -57,6 +57,16 @@ public class    UsuarioController {
         return ResponseEntity.ok(usuario);
     }
 
+    @GetMapping("/email/{email}")
+    public ResponseEntity<UsuarioResponsePerfilDTO> buscarPorEmail(@PathVariable String email){
+        try {
+            UsuarioResponsePerfilDTO usuario = service.buscaPorEmail(email);
+            return ResponseEntity.ok(usuario);
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
+    }
+
     @PostMapping
     public ResponseEntity<UsuarioResponsePerfilDTO> criarUsuario(@Valid @RequestBody UsuarioRequestDTO usuarioDTO) {
         try {

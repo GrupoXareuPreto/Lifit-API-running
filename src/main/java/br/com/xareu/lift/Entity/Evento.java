@@ -36,12 +36,14 @@ public class Evento {
     @Column(name = "DT_FIM")
     private LocalDateTime dataFim;
 
-    @Column(name = "DT_CRIACAO", nullable = false, updatable = false)
+    @Column(name = "DT_CRIACAO", nullable = true, updatable = false)
     private LocalDateTime dataCriacao;
 
     @PrePersist
     protected void onCreate() {
-        dataCriacao = LocalDateTime.now();
+        if (dataCriacao == null) {
+            dataCriacao = LocalDateTime.now();
+        }
     }
 
     @ManyToOne

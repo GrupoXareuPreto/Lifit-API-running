@@ -69,8 +69,12 @@ public class FeedService {
         int eventosNecessarios = tamanhoPagina / 6; // 1 evento a cada 5 posts
         List<Evento> eventos = eventoRepository.findAll().stream()
                 .filter(e -> e.getDataInicio().isAfter(LocalDateTime.now()))
-                .filter(e -> ultimoCursor == null || e.getDataCriacao().isBefore(ultimoCursor))
-                .sorted((e1, e2) -> e2.getDataCriacao().compareTo(e1.getDataCriacao())) // Mais recente primeiro
+                .filter(e -> ultimoCursor == null || (e.getDataCriacao() != null && e.getDataCriacao().isBefore(ultimoCursor)))
+                .sorted((e1, e2) -> {
+                    LocalDateTime dc1 = e1.getDataCriacao() != null ? e1.getDataCriacao() : e1.getDataInicio();
+                    LocalDateTime dc2 = e2.getDataCriacao() != null ? e2.getDataCriacao() : e2.getDataInicio();
+                    return dc2.compareTo(dc1); // Mais recente primeiro
+                })
                 .limit(eventosNecessarios)
                 .toList();
 

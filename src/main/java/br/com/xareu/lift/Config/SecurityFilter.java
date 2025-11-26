@@ -33,14 +33,20 @@ public class SecurityFilter extends OncePerRequestFilter {
         if (token != null) {
             // Valida o token e obtém o email do usuário
             var email = tokenService.validateToken(token);
+            System.out.println("SecurityFilter - Email do token: " + email);
+            
             // Busca o usuário no banco de dados pelo email
             UserDetails user = (UserDetails) usuarioRepository.findByEmail(email).orElse(null);
+            System.out.println("SecurityFilter - Usuário encontrado: " + (user != null ? "SIM" : "NÃO"));
 
             if (user != null) {
                 // Se o usuário for encontrado, cria um objeto de autenticação
                 var authentication = new UsernamePasswordAuthenticationToken(user, null, user.getAuthorities());
                 // Define o usuário como autenticado no contexto de segurança do Spring
                 SecurityContextHolder.getContext().setAuthentication(authentication);
+                System.out.println("SecurityFilter - Usuário autenticado com sucesso");
+            } else {
+                System.out.println("SecurityFilter - ERRO: Usuário não encontrado no banco para email: " + email);
             }
         }
         // Continua a cadeia de filtros

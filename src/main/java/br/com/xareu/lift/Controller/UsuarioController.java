@@ -44,6 +44,9 @@ public class    UsuarioController {
 
     @GetMapping("/me")
     public ResponseEntity<UsuarioResponsePerfilDTO> getMeuPerfil(@AuthenticationPrincipal Usuario usuarioLogado) {
+        if (usuarioLogado == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
         UsuarioResponsePerfilDTO meuPerfil = service.buscarPorId(usuarioLogado.getId());
         return ResponseEntity.ok(meuPerfil);
     }

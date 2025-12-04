@@ -68,6 +68,12 @@ public class    UsuarioController {
         }
     }
 
+    @GetMapping("/buscar")
+    public ResponseEntity<List<UsuarioResponsePerfilDTO>> buscarUsuarios(@RequestParam String query) {
+        List<UsuarioResponsePerfilDTO> usuarios = service.buscarPorNomeOuUsername(query);
+        return ResponseEntity.ok(usuarios);
+    }
+
     @PostMapping
     public ResponseEntity<UsuarioResponsePerfilDTO> criarUsuario(@Valid @RequestBody UsuarioRequestDTO usuarioDTO) {
         try {

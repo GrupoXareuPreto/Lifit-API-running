@@ -33,11 +33,12 @@ public class CurtidaService {
 /*--------------------------------------------------------------------------------------------------------------------*/
 /*parte de DTOs*/
     private CurtidaResponseDTO toResponseDTO(Curtida curtida) {
+        Long postagemId = curtida.getPostagem() != null ? curtida.getPostagem().getId() : null;
         return new CurtidaResponseDTO(
                 curtida.getId(),
                 curtida.getAutor().getId(),
                 curtida.getAutor().getNomeUsuario(),
-                curtida.getPostagem().getId()
+                postagemId
         );
     }
 

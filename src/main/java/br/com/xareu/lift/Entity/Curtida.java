@@ -21,8 +21,12 @@ public class Curtida {
 
     /*private ... id_postagem*/
     @ManyToOne
-    @JoinColumn(name = "ID_POSTAGEM", nullable = false)
+    @JoinColumn(name = "ID_POSTAGEM")
     private Postagem postagem;
+
+    @ManyToOne
+    @JoinColumn(name = "ID_EVENTO")
+    private Evento evento;
 
     @ManyToOne
     @JoinColumn(name = "ID_USUARIO", nullable = false)

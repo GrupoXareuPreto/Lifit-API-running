@@ -42,6 +42,11 @@ public class EventoService {
                 && evento.getParticipantes().stream()
                         .anyMatch(p -> p.getId().equals(usuarioLogado.getId()));
         
+        // Verifica se o usuário curtiu este evento
+        boolean usuarioCurtiu = evento.getCurtidas() != null
+                && evento.getCurtidas().stream()
+                        .anyMatch(c -> c.getAutor().getId().equals(usuarioLogado.getId()));
+        
         return new EventoResponseFeedDTO(
                 evento.getId(),
                 evento.getTitulo(),
@@ -56,7 +61,8 @@ public class EventoService {
                 evento.getCompartilhamentos(),
                 evento.getParticipantes() != null ? evento.getParticipantes().size() : 0,
                 usuarioMapper.toUsuarioResponseSimplesList(primeirosParticipantes),
-                confirmado
+                confirmado,
+                usuarioCurtiu
         );
     }
 

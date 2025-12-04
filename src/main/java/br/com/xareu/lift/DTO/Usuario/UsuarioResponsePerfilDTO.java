@@ -8,6 +8,7 @@ import java.util.List;
 
 
 public record UsuarioResponsePerfilDTO(
+        Long id,
         String nome,
         String fotoPerfil,
         String biografia,

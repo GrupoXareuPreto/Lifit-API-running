@@ -75,12 +75,20 @@ public class CurtidaService {
 
         Curtida curtidaSalva = curtidaRepository.save(novaCurtida);
         return toResponseDTO(curtidaSalva);
-    }   Curtida curtidaSalva = curtidaRepository.save(novaCurtida);
-        return toResponseDTO(curtidaSalva);
     }
 
-
     /*Curtida não pode ser editada*/
+
+    @Transactional
+    public void excluirCurtida(Long postagemId, Usuario autorLogado) {
+        Postagem postagem = postagemRepository.findById(postagemId)
+                .orElseThrow(() -> new RuntimeException("Postagem não encontrada"));
+
+        Curtida curtida = curtidaRepository.findByPostagemAndAutor(postagem, autorLogado)
+                .orElseThrow(() -> new RuntimeException("Curtida não encontrada para este usuário e postagem."));
+
+        curtidaRepository.delete(curtida);
+    }
 
     @Transactional
     public void excluirCurtidaEvento(Long eventoId, Usuario autorLogado) {
@@ -90,21 +98,6 @@ public class CurtidaService {
         Curtida curtida = curtidaRepository.findByEventoAndAutor(evento, autorLogado)
                 .orElseThrow(() -> new RuntimeException("Curtida não encontrada para este usuário e evento."));
 
-        curtidaRepository.delete(curtida);
-    }
-
-    public List<CurtidaResponseDTO> getCurtidasPorPostagem(Long postagemId) {
-        if (!postagemRepository.existsById(postagemId)) {
-            throw new RuntimeException("Postagem não encontrada");
-        }
-        return curtidaRepository.findByPostagemId(postagemId).stream()
-                .map(this::toResponseDTO)
-                .collect(Collectors.toList());
-    }
-}               .orElseThrow(() -> new RuntimeException("Curtida não encontrada para este usuário e postagem."));
-
-        // Deleta a curtida encontrada. A verificação de permissão é implícita,
-        // pois só encontramos uma curtida se ela pertencer ao autorLogado.
         curtidaRepository.delete(curtida);
     }
 

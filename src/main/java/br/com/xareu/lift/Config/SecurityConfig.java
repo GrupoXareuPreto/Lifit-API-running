@@ -30,6 +30,7 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.POST, "/usuario").permitAll()
                         .requestMatchers(HttpMethod.GET, "/usuario", "/usuario/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/metas/publicas").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/evento/**").permitAll()
                         .anyRequest().authenticated()
                 )
                 .addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter.class)

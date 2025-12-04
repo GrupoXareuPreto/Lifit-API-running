@@ -41,12 +41,17 @@ public class TokenService {
     public String validateToken(String token) {
         try {
             Algorithm algorithm = Algorithm.HMAC256(secret);
-            return JWT.require(algorithm)
+            String subject = JWT.require(algorithm)
                     .withIssuer("lift-api") // Verifica se o emissor é o mesmo
                     .build()
                     .verify(token) // Verifica a assinatura e a validade do token
                     .getSubject(); // Retorna o assunto (email do usuário)
+            
+            System.out.println("TokenService - Token validado com sucesso. Email: " + subject);
+            return subject;
         } catch (JWTVerificationException exception) {
+            System.out.println("TokenService - ERRO ao validar token: " + exception.getMessage());
+            exception.printStackTrace();
             return ""; // Retorna vazio se o token for inválido
         }
     }

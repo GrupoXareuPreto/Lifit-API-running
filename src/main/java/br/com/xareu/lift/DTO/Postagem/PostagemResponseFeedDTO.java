@@ -4,6 +4,7 @@ import br.com.xareu.lift.DTO.Usuario.UsuarioResponseCardPostagemEventoDTO;
 import java.time.LocalDateTime;
 
 public record PostagemResponseFeedDTO(
+        Long id,
         UsuarioResponseCardPostagemEventoDTO autor,
         String midia,
         String titulo,
@@ -11,5 +12,6 @@ public record PostagemResponseFeedDTO(
         int numCurtidas,
         int numComentaios,
         int numCompartilhamentos,
-        String descricao
+        String descricao,
+        boolean usuarioCurtiu
 ) {}

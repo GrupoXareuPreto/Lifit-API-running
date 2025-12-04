@@ -37,7 +37,7 @@ public class CurtidaController {
 
 
     @DeleteMapping("/postagem/{postagemId}")
-    public ResponseEntity<Void> excluirCurtida(
+    public ResponseEntity<Void> excluirCurtidaPostagem(
             @PathVariable Long postagemId,
             @AuthenticationPrincipal Usuario usuarioLogado) {
         try {
@@ -45,6 +45,18 @@ public class CurtidaController {
             return ResponseEntity.noContent().build(); // Retorna 204 No Content para sucesso
         } catch (RuntimeException e) {
             // Captura "Postagem não encontrada" ou "Curtida não encontrada"
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
+        }
+    }
+
+    @DeleteMapping("/evento/{eventoId}")
+    public ResponseEntity<Void> excluirCurtidaEvento(
+            @PathVariable Long eventoId,
+            @AuthenticationPrincipal Usuario usuarioLogado) {
+        try {
+            service.excluirCurtidaEvento(eventoId, usuarioLogado);
+            return ResponseEntity.noContent().build();
+        } catch (RuntimeException e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
         }
     }

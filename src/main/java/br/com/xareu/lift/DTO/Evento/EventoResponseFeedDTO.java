@@ -20,7 +20,8 @@ public record EventoResponseFeedDTO (
          int numCompartilhamentos,
          int numParticipantes,
          List<UsuarioResponseSimples> participantes,
-         boolean usuarioConfirmado
+         boolean usuarioConfirmado,
+         boolean usuarioCurtiu
 )
 {}
 

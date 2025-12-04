@@ -86,7 +86,7 @@ public class FeedService {
         while (feedUnificado.size() < tamanhoPagina && postIndex < postagens.size()) {
             // Adiciona 5 posts
             for (int i = 0; i < 5 && postIndex < postagens.size() && feedUnificado.size() < tamanhoPagina; i++) {
-                PostagemResponseFeedDTO postagemDTO = postagemMapper.toResponseFeedDTO(postagens.get(postIndex++));
+                PostagemResponseFeedDTO postagemDTO = toPostagemResponseFeedDTO(postagens.get(postIndex++), usuario);
                 feedUnificado.add(ItemFeedDTO.fromPostagem(postagemDTO));
             }
 
@@ -100,6 +100,26 @@ public class FeedService {
         return feedUnificado;
     }
 
+    private PostagemResponseFeedDTO toPostagemResponseFeedDTO(Postagem postagem, Usuario usuarioLogado) {
+        // Verifica se o usuário logado curtiu esta postagem
+        boolean usuarioCurtiu = postagem.getCurtidas() != null
+                && postagem.getCurtidas().stream()
+                        .anyMatch(c -> c.getAutor().getId().equals(usuarioLogado.getId()));
+
+        return new PostagemResponseFeedDTO(
+                postagem.getId(),
+                usuarioMapper.toUsuarioCardPostagemEventoDTO(postagem.getAutor()),
+                postagem.getMidia(),
+                postagem.getTitulo(),
+                postagem.getDataPublicacao(),
+                postagem.getCurtidas() != null ? postagem.getCurtidas().size() : 0,
+                postagem.getComentarios() != null ? postagem.getComentarios().size() : 0,
+                postagem.getCompartilhamentos(),
+                postagem.getDescricao(),
+                usuarioCurtiu
+        );
+    }
+
     private EventoResponseFeedDTO toEventoResponseFeedDTO(Evento evento, Usuario usuarioLogado) {
         // Pega os primeiros 3 participantes
         List<Usuario> primeirosParticipantes = evento.getParticipantes() != null
@@ -110,6 +130,11 @@ public class FeedService {
         boolean confirmado = evento.getParticipantes() != null
                 && evento.getParticipantes().stream()
                         .anyMatch(p -> p.getId().equals(usuarioLogado.getId()));
+
+        // Verifica se o usuário logado curtiu este evento
+        boolean usuarioCurtiu = evento.getCurtidas() != null
+                && evento.getCurtidas().stream()
+                        .anyMatch(c -> c.getAutor().getId().equals(usuarioLogado.getId()));
 
         return new EventoResponseFeedDTO(
                 evento.getId(),
@@ -125,7 +150,8 @@ public class FeedService {
                 evento.getCompartilhamentos(),
                 evento.getParticipantes() != null ? evento.getParticipantes().size() : 0,
                 usuarioMapper.toUsuarioResponseSimplesList(primeirosParticipantes),
-                confirmado
+                confirmado,
+                usuarioCurtiu
         );
     }
 }

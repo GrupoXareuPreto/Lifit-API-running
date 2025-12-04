@@ -72,12 +72,13 @@ public class UsuarioService {
 
 
     @Transactional
-    public UsuarioResponsePerfilDTO atualizarUsuarioLogado(UsuarioRequestDTO usuarioAtualizadoDTO, Usuario usuarioLogado) {
+    public UsuarioResponsePerfilDTO atualizarUsuarioLogado(UsuarioRequestAtualizarDTO usuarioAtualizadoDTO, Usuario usuarioLogado) {
         // O usuarioLogado já é a entidade que queremos atualizar.
         usuarioLogado.setNome(usuarioAtualizadoDTO.nome());
         usuarioLogado.setNomeUsuario(usuarioAtualizadoDTO.nomeUsuario());
         usuarioLogado.setBiografia(usuarioAtualizadoDTO.biografia());
         usuarioLogado.setEmail(usuarioAtualizadoDTO.email());
+        usuarioLogado.setFotoPerfil(usuarioAtualizadoDTO.fotoPerfil());
 
         // A senha só deve ser atualizada se for explicitamente fornecida.
         if (usuarioAtualizadoDTO.senha() != null && !usuarioAtualizadoDTO.senha().isEmpty()) {

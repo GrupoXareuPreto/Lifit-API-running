@@ -1,6 +1,7 @@
 package br.com.xareu.lift.Controller;
 
 import br.com.xareu.lift.DTO.Usuario.UsuarioRequestDTO;
+import br.com.xareu.lift.DTO.Usuario.UsuarioRequestAtualizarDTO;
 import br.com.xareu.lift.DTO.Usuario.UsuarioResponsePerfilDTO;
 import br.com.xareu.lift.Entity.Usuario;
 import br.com.xareu.lift.Service.UsuarioService;
@@ -79,7 +80,7 @@ public class    UsuarioController {
 
     @PutMapping("/me")
     public ResponseEntity<UsuarioResponsePerfilDTO> atualizarMeuPerfil(
-            @Valid @RequestBody UsuarioRequestDTO usuarioDTO,
+            @Valid @RequestBody UsuarioRequestAtualizarDTO usuarioDTO,
             @AuthenticationPrincipal Usuario usuarioLogado) {
 
         UsuarioResponsePerfilDTO usuarioAtualizado = service.atualizarUsuarioLogado(usuarioDTO, usuarioLogado);

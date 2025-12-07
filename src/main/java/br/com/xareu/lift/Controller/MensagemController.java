@@ -24,24 +24,20 @@ public class MensagemController {
         this.service = service;
     }
 
-//    @PostMapping
-//    public ResponseEntity<MensagemResponseDTO> criarMensagem(
-//            @Valid @RequestBody MensagemRequestDTO dto,
-//            @AuthenticationPrincipal Usuario usuarioLogado,
-//            @PathVariable Long idDestinatario) {
-//        try {
-//            MensagemResponseDTO novaMensagem = service.criarMensagem(dto, usuarioLogado);
-//            return new ResponseEntity<>(novaMensagem, HttpStatus.CREATED);
-//        } catch (IllegalAccessException e) {
-//            throw new ResponseStatusException(HttpStatus.FORBIDDEN, e.getMessage());
-//        }
-//        try{
-//
-//        }
-//        catch (Exception e){
-//            throw new ResponseStatusException(HttpStatus.FORBIDDEN, e.getMessage());
-//        }
-//    }
+    @PostMapping
+    public ResponseEntity<MensagemResponseDTO> criarMensagem(
+            @PathVariable Long conversaId,
+            @Valid @RequestBody MensagemRequestDTO dto,
+            @AuthenticationPrincipal Usuario usuarioLogado) {
+        try {
+            MensagemResponseDTO novaMensagem = service.criarMensagem(conversaId, dto, usuarioLogado);
+            return new ResponseEntity<>(novaMensagem, HttpStatus.CREATED);
+        } catch (IllegalAccessException e) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, e.getMessage());
+        } catch (RuntimeException e) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
+        }
+    }
 
     @GetMapping
     public ResponseEntity<List<MensagemResponseDTO>> listarMensagens(

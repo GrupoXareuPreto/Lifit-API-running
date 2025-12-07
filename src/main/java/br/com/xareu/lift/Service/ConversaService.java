@@ -34,7 +34,7 @@ public class ConversaService {
 
     private ConversaResponseDTO toResponseDTO(Conversa conversa) {
         List<UsuarioResponseCardConversaDTO> integrantesDTO = conversa.getIntegrantes().stream()
-                .map(u -> new UsuarioResponseCardConversaDTO(u.getId(), u.getNomeUsuario(), u.getFotoPerfil()))
+                .map(u -> new UsuarioResponseCardConversaDTO(u.getId(), u.getFotoPerfil(), u.getNome(), u.getNomeUsuario()))
                 .collect(Collectors.toList());
 
         return new ConversaResponseDTO(
@@ -75,7 +75,7 @@ public class ConversaService {
                     .findFirst()
                     .orElseThrow(() -> new RuntimeException("Outro usuário não encontrado"));
             
-           
+
         }
 
         Conversa novaConversa = new Conversa();

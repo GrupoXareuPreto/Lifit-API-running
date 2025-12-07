@@ -75,10 +75,7 @@ public class ConversaService {
                     .findFirst()
                     .orElseThrow(() -> new RuntimeException("Outro usuário não encontrado"));
             
-            Optional<Conversa> conversaExistente = conversaRepository.findConversaEntreDoasUsuarios(criadorManaged, outroUsuario);
-            if (conversaExistente.isPresent()) {
-                return toResponseDTO(conversaExistente.get());
-            }
+           
         }
 
         Conversa novaConversa = new Conversa();

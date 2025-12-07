@@ -8,6 +8,7 @@ import br.com.xareu.lift.Entity.Usuario;
 import br.com.xareu.lift.Mapper.EventoMapper;
 import br.com.xareu.lift.Mapper.UsuarioMapper;
 import br.com.xareu.lift.Repository.EventoRepository;
+import br.com.xareu.lift.Repository.UsuarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -20,6 +21,9 @@ public class EventoService {
 
     @Autowired
     private EventoRepository repository;
+
+    @Autowired
+    private UsuarioRepository usuarioRepository;
 
     @Autowired
     private EventoMapper eventoMapper;
@@ -145,18 +149,23 @@ public class EventoService {
         Evento evento = repository.findById(eventoId)
                 .orElseThrow(() -> new RuntimeException("Evento não encontrado"));
         
-        // Adiciona o usuário à lista de participantes se ainda não estiver
-        if (evento.getParticipantes() == null) {
-            evento.setParticipantes(new java.util.ArrayList<>());
+        // Inicializa a lista de eventos do usuário se necessário
+        if (usuarioLogado.getEventosParticipar() == null) {
+            usuarioLogado.setEventosParticipar(new java.util.ArrayList<>());
         }
         
-        boolean jaConfirmado = evento.getParticipantes().stream()
-                .anyMatch(p -> p.getId().equals(usuarioLogado.getId()));
+        // Verifica se o usuário já confirmou presença
+        boolean jaConfirmado = usuarioLogado.getEventosParticipar().stream()
+                .anyMatch(e -> e.getId().equals(eventoId));
         
         if (!jaConfirmado) {
-            evento.getParticipantes().add(usuarioLogado);
-            repository.save(evento);
+            // Adiciona o evento na lista do usuário (lado proprietário do relacionamento)
+            usuarioLogado.getEventosParticipar().add(evento);
+            usuarioRepository.save(usuarioLogado);
         }
+        
+        // Recarrega o evento para ter a lista atualizada de participantes
+        evento = repository.findById(eventoId).orElseThrow();
         
         return toResponseFeedDTO(evento, usuarioLogado);
     }
@@ -166,10 +175,14 @@ public class EventoService {
         Evento evento = repository.findById(eventoId)
                 .orElseThrow(() -> new RuntimeException("Evento não encontrado"));
         
-        if (evento.getParticipantes() != null) {
-            evento.getParticipantes().removeIf(p -> p.getId().equals(usuarioLogado.getId()));
-            repository.save(evento);
+        // Remove o evento da lista do usuário (lado proprietário do relacionamento)
+        if (usuarioLogado.getEventosParticipar() != null) {
+            usuarioLogado.getEventosParticipar().removeIf(e -> e.getId().equals(eventoId));
+            usuarioRepository.save(usuarioLogado);
         }
+        
+        // Recarrega o evento para ter a lista atualizada de participantes
+        evento = repository.findById(eventoId).orElseThrow();
         
         return toResponseFeedDTO(evento, usuarioLogado);
     }

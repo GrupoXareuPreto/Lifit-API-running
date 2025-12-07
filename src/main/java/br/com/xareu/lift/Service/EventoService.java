@@ -149,19 +149,23 @@ public class EventoService {
         Evento evento = repository.findById(eventoId)
                 .orElseThrow(() -> new RuntimeException("Evento não encontrado"));
         
+        // Busca o usuário novamente dentro da transação para carregar as coleções lazy
+        Usuario usuario = usuarioRepository.findById(usuarioLogado.getId())
+                .orElseThrow(() -> new RuntimeException("Usuário não encontrado"));
+        
         // Inicializa a lista de eventos do usuário se necessário
-        if (usuarioLogado.getEventosParticipar() == null) {
-            usuarioLogado.setEventosParticipar(new java.util.ArrayList<>());
+        if (usuario.getEventosParticipar() == null) {
+            usuario.setEventosParticipar(new java.util.ArrayList<>());
         }
         
         // Verifica se o usuário já confirmou presença
-        boolean jaConfirmado = usuarioLogado.getEventosParticipar().stream()
+        boolean jaConfirmado = usuario.getEventosParticipar().stream()
                 .anyMatch(e -> e.getId().equals(eventoId));
         
         if (!jaConfirmado) {
             // Adiciona o evento na lista do usuário (lado proprietário do relacionamento)
-            usuarioLogado.getEventosParticipar().add(evento);
-            usuarioRepository.save(usuarioLogado);
+            usuario.getEventosParticipar().add(evento);
+            usuarioRepository.save(usuario);
         }
         
         // Recarrega o evento para ter a lista atualizada de participantes
@@ -175,10 +179,14 @@ public class EventoService {
         Evento evento = repository.findById(eventoId)
                 .orElseThrow(() -> new RuntimeException("Evento não encontrado"));
         
+        // Busca o usuário novamente dentro da transação para carregar as coleções lazy
+        Usuario usuario = usuarioRepository.findById(usuarioLogado.getId())
+                .orElseThrow(() -> new RuntimeException("Usuário não encontrado"));
+        
         // Remove o evento da lista do usuário (lado proprietário do relacionamento)
-        if (usuarioLogado.getEventosParticipar() != null) {
-            usuarioLogado.getEventosParticipar().removeIf(e -> e.getId().equals(eventoId));
-            usuarioRepository.save(usuarioLogado);
+        if (usuario.getEventosParticipar() != null) {
+            usuario.getEventosParticipar().removeIf(e -> e.getId().equals(eventoId));
+            usuarioRepository.save(usuario);
         }
         
         // Recarrega o evento para ter a lista atualizada de participantes

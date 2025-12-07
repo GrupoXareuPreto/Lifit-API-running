@@ -55,10 +55,14 @@ public class ConversaService {
 
     @Transactional
     public ConversaResponseDTO criarConversa(ConversaRequestDTO dto, Usuario criador) {
+        // Recarrega o criador dentro da transação para evitar LazyInitializationException
+        Usuario criadorManaged = usuarioRepository.findById(criador.getId())
+                .orElseThrow(() -> new RuntimeException("Usuário criador não encontrado"));
+        
         // Busca os integrantes no banco de dados a partir dos IDs
         List<Usuario> integrantes = usuarioRepository.findAllById(dto.integranteIds());
         // Adiciona o próprio criador à lista de integrantes
-        integrantes.add(criador);
+        integrantes.add(criadorManaged);
 
         if (integrantes.size() < 2) {
             throw new IllegalArgumentException("Uma conversa precisa de pelo menos 2 integrantes.");
@@ -70,7 +74,10 @@ public class ConversaService {
         // Lógica para título: se for uma conversa de 2 pessoas, o título pode ser o nome do outro.
         // Se for em grupo, usa o título do DTO.
         if (integrantes.size() == 2) {
-            Usuario outroUsuario = integrantes.stream().filter(u -> !u.getId().equals(criador.getId())).findFirst().get();
+            Usuario outroUsuario = integrantes.stream()
+                    .filter(u -> !u.getId().equals(criadorManaged.getId()))
+                    .findFirst()
+                    .orElseThrow(() -> new RuntimeException("Outro usuário não encontrado"));
             novaConversa.setTitulo(outroUsuario.getNomeUsuario());
         } else {
             novaConversa.setTitulo(dto.titulo());
@@ -82,11 +89,15 @@ public class ConversaService {
 
         // Atualiza a lista de conversas de cada integrante
         for (Usuario integrante : integrantes) {
-            if (integrante.getConversas() == null) {
-                integrante.setConversas(new ArrayList<>());
+            // Recarrega cada integrante para ter acesso às coleções lazy
+            Usuario integranteManaged = usuarioRepository.findById(integrante.getId())
+                    .orElseThrow(() -> new RuntimeException("Integrante não encontrado"));
+            
+            if (integranteManaged.getConversas() == null) {
+                integranteManaged.setConversas(new ArrayList<>());
             }
-            integrante.getConversas().add(conversaSalva);
-            usuarioRepository.save(integrante);
+            integranteManaged.getConversas().add(conversaSalva);
+            usuarioRepository.save(integranteManaged);
         }
 
         return toResponseDTO(conversaSalva);

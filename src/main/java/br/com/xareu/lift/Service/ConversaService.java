@@ -68,6 +68,19 @@ public class ConversaService {
             throw new IllegalArgumentException("Uma conversa precisa de pelo menos 2 integrantes.");
         }
 
+        // Se for uma conversa de 2 pessoas, verifica se já existe
+        if (integrantes.size() == 2) {
+            Usuario outroUsuario = integrantes.stream()
+                    .filter(u -> !u.getId().equals(criadorManaged.getId()))
+                    .findFirst()
+                    .orElseThrow(() -> new RuntimeException("Outro usuário não encontrado"));
+            
+            Optional<Conversa> conversaExistente = conversaRepository.findConversaEntreDoasUsuarios(criadorManaged, outroUsuario);
+            if (conversaExistente.isPresent()) {
+                return toResponseDTO(conversaExistente.get());
+            }
+        }
+
         Conversa novaConversa = new Conversa();
         novaConversa.setIntegrantes(integrantes);
 

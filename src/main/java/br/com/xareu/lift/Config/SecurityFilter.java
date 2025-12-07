@@ -35,8 +35,8 @@ public class SecurityFilter extends OncePerRequestFilter {
             var email = tokenService.validateToken(token);
             System.out.println("SecurityFilter - Email do token: " + email);
             
-            // Busca o usuário no banco de dados pelo email
-            UserDetails user = (UserDetails) usuarioRepository.findByEmail(email).orElse(null);
+            // Busca o usuário no banco de dados pelo email (mantém como Usuario, não UserDetails)
+            var user = usuarioRepository.findByEmail(email).orElse(null);
             System.out.println("SecurityFilter - Usuário encontrado: " + (user != null ? "SIM" : "NÃO"));
 
             if (user != null) {
